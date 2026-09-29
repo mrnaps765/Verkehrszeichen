@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verkehrszeichen-Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e6e8eb; --surface:#ffffff; --ink:#1d2228; --muted:#5d6670; --line:#cfd4da;
+  --blue:#0b5ea8; --blue-ink:#ffffff; --ok:#1d7a3e; --ok-bg:#e1f2e6; --bad:#b3121f; --bad-bg:#fbe3e5;
+  --post:#9aa3ad;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1f24; --surface:#262b32; --ink:#eef1f4; --muted:#a3adb8; --line:#3a414a;
+    --blue:#3d8fe0; --ok:#5fcf87; --ok-bg:#1f3a29; --bad:#ff7a84; --bad-bg:#43222a; --post:#5a636d;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b1f24; --surface:#262b32; --ink:#eef1f4; --muted:#a3adb8; --line:#3a414a;
+  --blue:#3d8fe0; --ok:#5fcf87; --ok-bg:#1f3a29; --bad:#ff7a84; --bad-bg:#43222a; --post:#5a636d;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Barlow,"Helvetica Neue",Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+h1{font:800 clamp(28px,6vw,40px)/1.05 "Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;margin:8px 0 4px;letter-spacing:-.01em}
+.lead{color:var(--muted);margin:0 0 20px;max-width:60ch}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px}
+nav.tabs button{flex:0 0 auto;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px "Barlow Semi Condensed",Arial,sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer}
+nav.tabs button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:var(--blue-ink)}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.cats button{border:0;background:transparent;color:var(--muted);font:500 14px Barlow,Arial,sans-serif;padding:4px 8px;border-radius:6px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:transparent}
+.cats button[aria-pressed="true"]{color:var(--ink);font-weight:600;text-decoration-color:var(--blue);text-decoration-thickness:3px}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.sign svg{display:block;width:100%;height:auto}
+/* Stage: Schild auf Pfosten */
+.stage{display:flex;flex-direction:column;align-items:center;margin:8px 0 18px}
+.stage .sign{width:min(62vw,230px)}
+.stage .post{width:10px;height:48px;background:var(--post);border-radius:0 0 3px 3px;margin-top:-6px}
+.progress{font:600 14px "Barlow Semi Condensed",Arial,sans-serif;color:var(--muted);text-align:center;margin-bottom:6px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:0 auto 16px;max-width:320px}
+.bar i{display:block;height:100%;background:var(--blue);transition:width .25s}
+.card{background:var(--surface);border-radius:14px;padding:18px;border:1px solid var(--line)}
+.answer .nr{color:var(--muted);font:600 14px "Barlow Semi Condensed",Arial,sans-serif}
+.answer h2{font:700 24px/1.15 "Barlow Semi Condensed",Arial,sans-serif;margin:2px 0 8px}
+.answer p{margin:0}
+.btnrow{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{flex:1 1 140px;border:0;border-radius:10px;padding:13px 14px;font:700 17px "Barlow Semi Condensed",Arial,sans-serif;cursor:pointer;background:var(--blue);color:var(--blue-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn.good{background:var(--ok);color:#fff}
+.btn.again{background:var(--bad);color:#fff}
+.opts{display:grid;gap:8px}
+.opt{text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:12px 14px;font:600 16px/1.3 Barlow,Arial,sans-serif;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+.signopts{grid-template-columns:repeat(2,1fr)}
+.signopts .opt{display:flex;justify-content:center;padding:14px}
+.signopts .opt .sign{width:min(30vw,120px)}
+.question{font:700 21px/1.3 "Barlow Semi Condensed",Arial,sans-serif;margin:0 0 14px}
+.feedback{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--bg)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start}
+.tile .nr{color:var(--muted);font:600 13px "Barlow Semi Condensed",Arial,sans-serif}
+.tile h3{font:700 17px/1.15 "Barlow Semi Condensed",Arial,sans-serif;margin:0 0 4px}
+.tile p{margin:0;font-size:14px;color:var(--muted)}
+.section-h{font:700 20px "Barlow Semi Condensed",Arial,sans-serif;margin:24px 0 10px}
+.result{text-align:center}
+.result .big{font:800 56px/1 "Barlow Semi Condensed",Arial,sans-serif}
+.misses{text-align:left;margin-top:14px}
+.misses li{margin-bottom:4px}
+.tip{font-size:14px;color:var(--muted);margin-top:28px;max-width:60ch}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Verkehrszeichen-Trainer</h1>
+  <p class="lead">Die wichtigsten Verkehrszeichen mit Nummer, Namen und Bedeutung – zum Lernen für den Einstellungstest bei der Polizei.</p>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="cats" id="cats"></div>
+  <main id="main"></main>
+  <p class="tip">Lerntipp: Erst die Übersicht einer Gruppe ansehen, dann mit den Karteikarten üben, zum Schluss beide Quiz-Varianten. Täglich 10 Minuten bringen mehr als einmal eine Stunde. Die Zeichen sind vereinfacht gezeichnet – zum Abgleich lohnt sich ein Blick in die Anlagen 1–3 der StVO.</p>
+</div>
+<script>
+const R='#c8102e',B='#0b5ea8',Y='#f5c400',G='#16823a',F='font-family="Arial,Helvetica,sans-serif" text-anchor="middle"';
+const svg=s=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${s}</svg>`;
+const tri=i=>`<polygon points="50,8 94,86 6,86" fill="#fff" stroke="${R}" stroke-width="8" stroke-linejoin="round"/>${i}`;
+const redC=i=>`<circle cx="50" cy="50" r="42" fill="#fff" stroke="${R}" stroke-width="9"/>${i}`;
+const blueC=i=>`<circle cx="50" cy="50" r="44" fill="${B}" stroke="#fff" stroke-width="2"/>${i}`;
+const blueS=i=>`<rect x="7" y="7" width="86" height="86" rx="6" fill="${B}" stroke="#fff" stroke-width="2"/>${i}`;
+const up=(x,c)=>`<path d="M${x} 74 L${x} 40" stroke="${c}" stroke-width="7"/><polygon points="${x},25 ${x-9},42 ${x+9},42" fill="${c}"/>`;
+const down=(x,c)=>`<path d="M${x} 26 L${x} 60" stroke="${c}" stroke-width="7"/><polygon points="${x},75 ${x-9},58 ${x+9},58" fill="${c}"/>`;
+const stripes=(id,shape,col,w,offs)=>`<clipPath id="${id}">${shape}</clipPath><g clip-path="url(#${id})" stroke="${col}" stroke-width="${w}">${offs.map(k=>`<line x1="0" y1="${100+k}" x2="${100+k}" y2="0"/>`).join('')}</g>`;
+const car=(x,c)=>`<rect x="${x}" y="38" width="20" height="26" rx="5" fill="${c}"/><rect x="${x+3}" y="42" width="14" height="8" rx="2" fill="#fff"/><rect x="${x+1}" y="61" width="5" height="8" fill="${c}"/><rect x="${x+14}" y="61" width="5" height="8" fill="${c}"/>`;
+const round3=()=>{const a=`<path d="M58.6 73.5 A25 25 0 0 0 75 50" fill="none" stroke="#fff" stroke-width="7"/><polygon points="75,39 68,52 82,52" fill="#fff"/>`;return [0,120,240].map(r=>`<g transform="rotate(${r} 50 50)">${a}</g>`).join('')};
+
+const SIGNS=[
+ {nr:'101',cat:'Gefahrzeichen',name:'Gefahrstelle',meaning:'Warnt vor einer Gefahrstelle. Die Art der Gefahr steht oft auf einem Zusatzzeichen darunter.',
+  s:tri(`<rect x="46" y="36" width="8" height="30" rx="2" fill="#111"/><circle cx="50" cy="74" r="4.6" fill="#111"/>`)},
+ {nr:'102',cat:'Gefahrzeichen',name:'Kreuzung oder Einmündung mit Vorfahrt von rechts',meaning:'An der nächsten Kreuzung oder Einmündung gilt „rechts vor links“.',
+  s:tri(`<path d="M37 42 L63 80 M63 42 L37 80" stroke="#111" stroke-width="7"/>`)},
+ {nr:'103',cat:'Gefahrzeichen',name:'Kurve (rechts)',meaning:'Warnt vor einer Rechtskurve – Geschwindigkeit anpassen. Gespiegelt warnt es vor einer Linkskurve.',
+  s:tri(`<path d="M44 82 L44 63 Q44 46 62 44" fill="none" stroke="#111" stroke-width="7"/>`)},
+ {nr:'120',cat:'Gefahrzeichen',name:'Verengte Fahrbahn',meaning:'Die Fahrbahn wird auf beiden Seiten schmaler.',
+  s:tri(`<path d="M34 82 L34 70 L43 57 L43 42 M66 82 L66 70 L57 57 L57 42" fill="none" stroke="#111" stroke-width="5"/>`)},
+ {nr:'131',cat:'Gefahrzeichen',name:'Lichtzeichenanlage',meaning:'Warnt vor einer Ampel, mit der man an dieser Stelle nicht rechnet.',
+  s:tri(`<rect x="41" y="35" width="18" height="47" rx="4" fill="#111"/><circle cx="50" cy="45" r="5" fill="#e3141f"/><circle cx="50" cy="59" r="5" fill="#f5b800"/><circle cx="50" cy="73" r="5" fill="#1a9a3a"/>`)},
+ {nr:'201',cat:'Vorschriftzeichen',name:'Andreaskreuz',meaning:'Bahnübergang: Schienenfahrzeuge haben Vorrang.',
+  s:[35,-35].map(r=>`<g transform="rotate(${r} 50 50)"><rect x="3" y="43" width="94" height="14" fill="#fff" stroke="${R}" stroke-width="2.5"/><rect x="3" y="43" width="18" height="14" fill="${R}"/><rect x="79" y="43" width="18" height="14" fill="${R}"/><rect x="41" y="43" width="18" height="14" fill="${R}"/></g>`).join('')},
+ {nr:'205',cat:'Vorschriftzeichen',name:'Vorfahrt gewähren',meaning:'Wartepflicht: Der Verkehr auf der kreuzenden Straße hat Vorfahrt.',
+  s:`<polygon points="6,12 94,12 50,90" fill="#fff" stroke="${R}" stroke-width="9" stroke-linejoin="round"/>`},
+ {nr:'206',cat:'Vorschriftzeichen',name:'Halt. Vorfahrt gewähren.',meaning:'Immer anhalten (an der Haltlinie) und dann dem Querverkehr Vorfahrt gewähren.',
+  s:`<polygon points="92.5,67.6 67.6,92.5 32.4,92.5 7.5,67.6 7.5,32.4 32.4,7.5 67.6,7.5 92.5,32.4" fill="${R}" stroke="#fff" stroke-width="3"/><text x="50" y="59" ${F} font-size="25" font-weight="800" fill="#fff">STOP</text>`},
+ {nr:'208',cat:'Vorschriftzeichen',name:'Vorrang des Gegenverkehrs',meaning:'An der Engstelle muss man den Gegenverkehr zuerst durchfahren lassen.',
+  s:redC(up(38,R)+down(62,'#111'))},
+ {nr:'209',cat:'Vorschriftzeichen',name:'Vorgeschriebene Fahrtrichtung – rechts',meaning:'An der nächsten Kreuzung darf man nur nach rechts abbiegen.',
+  s:blueC(`<path d="M40 77 L40 53 Q40 41 52 41 L58 41" fill="none" stroke="#fff" stroke-width="9"/><polygon points="75,41 58,28 58,54" fill="#fff"/>`)},
+ {nr:'215',cat:'Vorschriftzeichen',name:'Kreisverkehr',meaning:'Im Kreis nur in Pfeilrichtung fahren; auf der Kreisfahrbahn darf man nicht halten.',
+  s:blueC(round3())},
+ {nr:'220',cat:'Vorschriftzeichen',name:'Einbahnstraße',meaning:'Die Straße darf nur in Pfeilrichtung befahren werden.',
+  s:`<rect x="3" y="30" width="94" height="40" rx="3" fill="${B}" stroke="#fff" stroke-width="1.5"/><polygon points="8,41 70,41 70,34 93,50 70,66 70,59 8,59" fill="#fff"/><text x="39" y="53.5" ${F} font-size="8.5" font-weight="700" fill="#111">Einbahnstraße</text>`},
+ {nr:'224',cat:'Vorschriftzeichen',name:'Haltestelle',meaning:'Haltestelle für Linienbusse oder Straßenbahnen.',
+  s:`<circle cx="50" cy="50" r="42" fill="${Y}" stroke="${G}" stroke-width="7"/><text x="50" y="65" ${F} font-size="42" font-weight="800" fill="${G}">H</text>`},
+ {nr:'237',cat:'Vorschriftzeichen',name:'Radweg',meaning:'Radfahrer müssen diesen Weg benutzen; andere Fahrzeuge dürfen ihn nicht befahren.',
+  s:blueC(`<g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="31" cy="61" r="11"/><circle cx="69" cy="61" r="11"/><path d="M31 61 L50 61 L44 42 L31 61 M44 42 L62 42 L50 61 M62 42 L69 61 M62 42 L60 34 L66 34 M40 40 L48 40"/></g>`)},
+ {nr:'250',cat:'Vorschriftzeichen',name:'Verbot für Fahrzeuge aller Art',meaning:'Kein Fahrzeug darf hier fahren. Fahrräder dürfen geschoben werden.',
+  s:redC('')},
+ {nr:'267',cat:'Vorschriftzeichen',name:'Verbot der Einfahrt',meaning:'Man darf nicht in die Straße hineinfahren – typisch am Ende einer Einbahnstraße.',
+  s:`<circle cx="50" cy="50" r="44" fill="${R}" stroke="#fff" stroke-width="2"/><rect x="17" y="42" width="66" height="16" fill="#fff"/>`},
+ {nr:'274',cat:'Vorschriftzeichen',name:'Zulässige Höchstgeschwindigkeit',meaning:'Man darf nicht schneller fahren als angegeben (hier 50 km/h).',
+  s:redC(`<text x="50" y="63" ${F} font-size="36" font-weight="700" fill="#111">50</text>`)},
+ {nr:'274.1',cat:'Vorschriftzeichen',name:'Beginn einer Tempo 30-Zone',meaning:'Ab hier gilt in der ganzen Zone höchstens 30 km/h.',
+  s:`<rect x="12" y="4" width="76" height="92" rx="6" fill="#fff" stroke="#111" stroke-width="2.5"/><circle cx="50" cy="38" r="25" fill="#fff" stroke="${R}" stroke-width="6"/><text x="50" y="47" ${F} font-size="24" font-weight="700" fill="#111">30</text><text x="50" y="84" ${F} font-size="18" font-weight="800" fill="#111">ZONE</text>`},
+ {nr:'276',cat:'Vorschriftzeichen',name:'Überholverbot für Kraftfahrzeuge aller Art',meaning:'Kraftfahrzeuge dürfen keine mehrspurigen Kraftfahrzeuge (und Motorräder mit Beiwagen) überholen.',
+  s:redC(car(26,R)+car(54,'#111'))},
+ {nr:'278',cat:'Vorschriftzeichen',name:'Ende der zulässigen Höchstgeschwindigkeit',meaning:'Die vorher angeordnete Höchstgeschwindigkeit (hier 50 km/h) gilt nicht mehr.',
+  s:`<circle cx="50" cy="50" r="43" fill="#fff" stroke="#8a8f95" stroke-width="2"/><text x="50" y="63" ${F} font-size="36" font-weight="700" fill="#8a8f95">50</text>`+stripes('c278','<circle cx="50" cy="50" r="41"/>','#555',2.5,[-10,0,10])},
+ {nr:'282',cat:'Vorschriftzeichen',name:'Ende sämtlicher Streckenverbote',meaning:'Alle vorher angeordneten Geschwindigkeitsbegrenzungen und Überholverbote enden.',
+  s:`<circle cx="50" cy="50" r="43" fill="#fff" stroke="#333" stroke-width="2"/>`+stripes('c282','<circle cx="50" cy="50" r="41"/>','#111',3.5,[-28,-14,0,14,28])},
+ {nr:'283',cat:'Vorschriftzeichen',name:'Absolutes Haltverbot',meaning:'Halten ist verboten – auch nur ganz kurz.',
+  s:`<circle cx="50" cy="50" r="42" fill="${B}" stroke="${R}" stroke-width="9"/><path d="M22 22 L78 78 M78 22 L22 78" stroke="${R}" stroke-width="9"/>`},
+ {nr:'286',cat:'Vorschriftzeichen',name:'Eingeschränktes Haltverbot',meaning:'Halten nur bis 3 Minuten zum Ein- oder Aussteigen oder Be- und Entladen; Parken ist verboten.',
+  s:`<circle cx="50" cy="50" r="42" fill="${B}" stroke="${R}" stroke-width="9"/><path d="M22 22 L78 78" stroke="${R}" stroke-width="9"/>`},
+ {nr:'301',cat:'Richtzeichen',name:'Vorfahrt',meaning:'Vorfahrt nur an der nächsten Kreuzung oder Einmündung.',
+  s:tri(`<polygon points="46,36 54,36 58,81 42,81" fill="#111"/><rect x="35" y="57" width="30" height="4" fill="#111"/>`)},
+ {nr:'306',cat:'Richtzeichen',name:'Vorfahrtstraße',meaning:'Man hat Vorfahrt bis zum nächsten Zeichen „Vorfahrt gewähren“, „Halt“ oder „Ende der Vorfahrtstraße“.',
+  s:`<polygon points="50,4 96,50 50,96 4,50" fill="#fff" stroke="#555" stroke-width="1.5"/><polygon points="50,18 82,50 50,82 18,50" fill="${Y}"/>`},
+ {nr:'307',cat:'Richtzeichen',name:'Ende der Vorfahrtstraße',meaning:'Die Vorfahrtstraße endet – ab hier gelten wieder die normalen Vorfahrtregeln.',
+  s:`<polygon points="50,4 96,50 50,96 4,50" fill="#fff" stroke="#555" stroke-width="1.5"/><polygon points="50,18 82,50 50,82 18,50" fill="${Y}"/>`+stripes('c307','<polygon points="50,6 94,50 50,94 6,50"/>','#222',3,[-16,-8,0,8,16])},
+ {nr:'308',cat:'Richtzeichen',name:'Vorrang vor dem Gegenverkehr',meaning:'An der Engstelle darf man vor dem Gegenverkehr durchfahren.',
+  s:blueS(up(38,'#fff')+down(62,R))},
+ {nr:'310',cat:'Richtzeichen',name:'Ortstafel – Anfang',meaning:'Beginn einer geschlossenen Ortschaft: innerorts gilt höchstens 50 km/h.',
+  s:`<rect x="3" y="24" width="94" height="52" rx="4" fill="${Y}" stroke="#111" stroke-width="2.5"/><text x="50" y="52" ${F} font-size="14" font-weight="800" fill="#111">Musterstadt</text><text x="50" y="66" ${F} font-size="8" fill="#111">Kreis Beispiel</text>`},
+ {nr:'311',cat:'Richtzeichen',name:'Ortstafel – Ende',meaning:'Ende der geschlossenen Ortschaft: die Innerortsregeln (z. B. 50 km/h) enden.',
+  s:`<rect x="3" y="24" width="94" height="52" rx="4" fill="${Y}" stroke="#111" stroke-width="2.5"/><text x="50" y="42" ${F} font-size="10" font-weight="700" fill="#111">Nachbarort 5 km</text><text x="50" y="64" ${F} font-size="13" font-weight="800" fill="#111">Musterstadt</text><path d="M10 72 L90 48" stroke="${R}" stroke-width="5"/>`},
+ {nr:'314',cat:'Richtzeichen',name:'Parken',meaning:'Hier darf geparkt werden (Parkplatz).',
+  s:blueS(`<text x="50" y="72" ${F} font-size="62" font-weight="800" fill="#fff">P</text>`)},
+ {nr:'357',cat:'Richtzeichen',name:'Sackgasse',meaning:'Die Straße hat keine Durchfahrt für Fahrzeuge.',
+  s:blueS(`<rect x="43" y="38" width="14" height="48" fill="#fff"/><rect x="22" y="20" width="56" height="17" fill="${R}"/>`)}
+];
+
+const CATS=['Alle','Gefahrzeichen','Vorschriftzeichen','Richtzeichen'];
+const MODES=[['overview','Übersicht'],['cards','Karteikarten'],['qname','Quiz: Name'],['qmean','Quiz: Bedeutung']];
+let mode='overview',cat='Alle',st={};
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pool=()=>cat==='Alle'?SIGNS:SIGNS.filter(s=>s.cat===cat);
+const signHTML=s=>`<div class="sign">${svg(s.s)}</div>`;
+const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+function renderNav(){
+  $('tabs').innerHTML=MODES.map(([k,l])=>`<button aria-pressed="${k===mode}" data-m="${k}">${l}</button>`).join('');
+  $('cats').innerHTML=CATS.map(c=>`<button aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join('');
+}
+$('tabs').onclick=e=>{const m=e.target.dataset.m;if(m){mode=m;start()}};
+$('cats').onclick=e=>{const c=e.target.dataset.c;if(c){cat=c;start()}};
+
+function start(){
+  renderNav();
+  if(mode==='cards'){st={deck:shuffle(pool()),i:0,flip:false,known:0,total:pool().length}}
+  if(mode==='qname'||mode==='qmean'){st={qs:shuffle(pool()),i:0,score:0,done:false,miss:[]}}
+  render();
+}
+
+function render(){
+  const m=$('main');
+  if(mode==='overview'){
+    const groups=cat==='Alle'?CATS.slice(1):[cat];
+    m.innerHTML=groups.map(g=>`<h2 class="section-h">${g}</h2><div class="grid">${SIGNS.filter(s=>s.cat===g).map(s=>`<div class="tile">${signHTML(s)}<div><div class="nr">Zeichen ${s.nr}</div><h3>${esc(s.name)}</h3><p>${esc(s.meaning)}</p></div></div>`).join('')}</div>`).join('');
+    return;
+  }
+  if(mode==='cards'){
+    if(st.i>=st.deck.length){
+      m.innerHTML=`<div class="card result"><div class="big">Geschafft</div><p>Alle ${st.total} Zeichen sitzen – jedes mindestens einmal gewusst.</p><div class="btnrow"><button class="btn" id="re">Noch einmal durchgehen</button></div></div>`;
+      $('re').onclick=start;return;
+    }
+    const s=st.deck[st.i];
+    m.innerHTML=`<div class="progress">${st.known} von ${st.total} gewusst</div><div class="bar"><i style="width:${st.known/st.total*100}%"></i></div>
+    <div class="stage">${signHTML(s)}<div class="post"></div></div>
+    ${st.flip?`<div class="card answer"><div class="nr">Zeichen ${s.nr} · ${s.cat}</div><h2>${esc(s.name)}</h2><p>${esc(s.meaning)}</p>
+      <div class="btnrow"><button class="btn again" id="no">Nochmal üben</button><button class="btn good" id="yes">Gewusst</button></div></div>`
+    :`<div class="card" style="text-align:center"><p style="margin:0 0 4px">Wie heißt dieses Zeichen und was bedeutet es? Erst laut sagen, dann aufdecken.</p><div class="btnrow"><button class="btn" id="flip">Aufdecken</button></div></div>`}`;
+    if(st.flip){
+      $('yes').onclick=()=>{st.known++;st.i++;st.flip=false;render()};
+      $('no').onclick=()=>{const c=st.deck.splice(st.i,1)[0];st.deck.splice(Math.min(st.i+3,st.deck.length),0,c);st.flip=false;render()};
+    } else $('flip').onclick=()=>{st.flip=true;render()};
+    return;
+  }
+  // Quiz
+  if(st.i>=st.qs.length){
+    const n=st.qs.length;
+    m.innerHTML=`<div class="card result"><div class="big">${st.score}/${n}</div><p>${st.score===n?'Alles richtig!':st.score>=n*0.8?'Fast alles – die Fehler noch einmal üben.':'Die folgenden Zeichen solltest du wiederholen:'}</p>
+    ${st.miss.length?`<ul class="misses">${st.miss.map(s=>`<li><strong>Zeichen ${s.nr}:</strong> ${esc(s.name)}</li>`).join('')}</ul>`:''}
+    <div class="btnrow">${st.miss.length?'<button class="btn" id="miss">Nur Fehler üben</button>':''}<button class="btn ghost" id="re">Neues Quiz</button></div></div>`;
+    $('re').onclick=start;
+    if(st.miss.length)$('miss').onclick=()=>{st={qs:shuffle(st.miss),i:0,score:0,miss:[]};render()};
+    return;
+  }
+  const s=st.qs[st.i];
+  if(!st.opts){
+    const same=shuffle(SIGNS.filter(x=>x!==s&&x.cat===s.cat)),other=shuffle(SIGNS.filter(x=>x!==s&&x.cat!==s.cat));
+    st.opts=shuffle([s,...[...same,...other].slice(0,3)]);st.picked=null;
+  }
+  const head=`<div class="progress">Frage ${st.i+1} von ${st.qs.length} · ${st.score} richtig</div><div class="bar"><i style="width:${st.i/st.qs.length*100}%"></i></div>`;
+  const cls=o=>st.picked==null?'':o===s?'right':o===st.picked?'wrong':'';
+  const fb=st.picked==null?'':`<div class="feedback"><strong>${st.picked===s?'Richtig.':'Nicht ganz.'}</strong> Zeichen ${s.nr} „${esc(s.name)}“: ${esc(s.meaning)}</div><div class="btnrow"><button class="btn" id="next">Weiter</button></div>`;
+  if(mode==='qname'){
+    m.innerHTML=head+`<div class="stage">${signHTML(s)}<div class="post"></div></div><p class="question">Wie heißt dieses Zeichen?</p>
+    <div class="opts">${st.opts.map((o,k)=>`<button class="opt ${cls(o)}" data-k="${k}" ${st.picked!=null?'disabled':''}>${esc(o.name)}</button>`).join('')}</div>${fb}`;
+  } else {
+    m.innerHTML=head+`<div class="card"><p class="question" style="margin:0">${esc(s.meaning)}</p></div><p style="color:var(--muted);margin:12px 0 10px">Welches Zeichen passt?</p>
+    <div class="opts signopts">${st.opts.map((o,k)=>`<button class="opt ${cls(o)}" data-k="${k}" aria-label="Option ${k+1}" ${st.picked!=null?'disabled':''}>${signHTML(o)}</button>`).join('')}</div>${fb}`;
+  }
+  m.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    st.picked=st.opts[+b.dataset.k];
+    if(st.picked===s)st.score++;else st.miss.push(s);
+    render();
+  });
+  if(st.picked!=null)$('next').onclick=()=>{st.i++;st.opts=null;render()};
+}
+start();
+</script>
+</body>
+</html>
