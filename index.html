@@ -3,91 +3,106 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Verkehrszeichen-Trainer</title>
+<title>Testtrainer Polizei NRW</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#e6e8eb; --surface:#ffffff; --ink:#1d2228; --muted:#5d6670; --line:#cfd4da;
-  --blue:#0b5ea8; --blue-ink:#ffffff; --ok:#1d7a3e; --ok-bg:#e1f2e6; --bad:#b3121f; --bad-bg:#fbe3e5;
-  --post:#9aa3ad;
+  --blue:#0b5ea8; --blue-ink:#ffffff; --ok:#1d7a3e; --ok-bg:#e1f2e6; --bad:#b3121f; --bad-bg:#fbe3e5; --sel-bg:#dbe8f6;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#1b1f24; --surface:#262b32; --ink:#eef1f4; --muted:#a3adb8; --line:#3a414a;
-    --blue:#3d8fe0; --ok:#5fcf87; --ok-bg:#1f3a29; --bad:#ff7a84; --bad-bg:#43222a; --post:#5a636d;
+    --blue:#3d8fe0; --ok:#5fcf87; --ok-bg:#1f3a29; --bad:#ff7a84; --bad-bg:#43222a; --sel-bg:#1d3550;
   }
 }
 :root[data-theme="dark"]{
   --bg:#1b1f24; --surface:#262b32; --ink:#eef1f4; --muted:#a3adb8; --line:#3a414a;
-  --blue:#3d8fe0; --ok:#5fcf87; --ok-bg:#1f3a29; --bad:#ff7a84; --bad-bg:#43222a; --post:#5a636d;
+  --blue:#3d8fe0; --ok:#5fcf87; --ok-bg:#1f3a29; --bad:#ff7a84; --bad-bg:#43222a; --sel-bg:#1d3550;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Barlow,"Helvetica Neue",Arial,sans-serif}
 .wrap{max-width:760px;margin:0 auto;padding:20px 16px 48px}
-h1{font:800 clamp(28px,6vw,40px)/1.05 "Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;margin:8px 0 4px;letter-spacing:-.01em}
-.lead{color:var(--muted);margin:0 0 20px;max-width:60ch}
-nav.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px}
-nav.tabs button{flex:0 0 auto;border:2px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px "Barlow Semi Condensed",Arial,sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer}
-nav.tabs button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:var(--blue-ink)}
-.cats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
-.cats button{border:0;background:transparent;color:var(--muted);font:500 14px Barlow,Arial,sans-serif;padding:4px 8px;border-radius:6px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;text-decoration-color:transparent}
-.cats button[aria-pressed="true"]{color:var(--ink);font-weight:600;text-decoration-color:var(--blue);text-decoration-thickness:3px}
+h1{font:800 clamp(28px,6vw,40px)/1.05 "Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;margin:8px 0 4px}
+h2{font:700 24px/1.15 "Barlow Semi Condensed",Arial,sans-serif;margin:0}
+.lead{color:var(--muted);margin:0 0 8px;max-width:62ch}
+.muted{color:var(--muted)}
+.group-h{font:700 14px "Barlow Semi Condensed",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:26px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.mod{text-align:left;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:10px;padding:12px 14px;cursor:pointer;color:var(--ink);font:inherit}
+.mod:hover{border-color:var(--blue)}
+.mod b{display:block;font:700 18px/1.2 "Barlow Semi Condensed",Arial,sans-serif}
+.mod span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.mod em{display:block;font-style:normal;font-size:13px;color:var(--ok);margin-top:4px;font-weight:600}
 button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.sign svg{display:block;width:100%;height:auto}
-/* Stage: Schild auf Pfosten */
-.stage{display:flex;flex-direction:column;align-items:center;margin:8px 0 18px}
-.stage .sign{width:min(62vw,230px)}
-.stage .post{width:10px;height:48px;background:var(--post);border-radius:0 0 3px 3px;margin-top:-6px}
-.progress{font:600 14px "Barlow Semi Condensed",Arial,sans-serif;color:var(--muted);text-align:center;margin-bottom:6px}
-.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:0 auto 16px;max-width:320px}
-.bar i{display:block;height:100%;background:var(--blue);transition:width .25s}
+.modhead{display:flex;align-items:center;gap:12px;margin:4px 0 14px;flex-wrap:wrap}
+.back{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 14px "Barlow Semi Condensed",Arial,sans-serif;cursor:pointer}
 .card{background:var(--surface);border-radius:14px;padding:18px;border:1px solid var(--line)}
-.answer .nr{color:var(--muted);font:600 14px "Barlow Semi Condensed",Arial,sans-serif}
-.answer h2{font:700 24px/1.15 "Barlow Semi Condensed",Arial,sans-serif;margin:2px 0 8px}
-.answer p{margin:0}
+.card p:first-child{margin-top:0}
 .btnrow{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
 .btn{flex:1 1 140px;border:0;border-radius:10px;padding:13px 14px;font:700 17px "Barlow Semi Condensed",Arial,sans-serif;cursor:pointer;background:var(--blue);color:var(--blue-ink)}
 .btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
-.btn.good{background:var(--ok);color:#fff}
-.btn.again{background:var(--bad);color:#fff}
+.progress{font:600 14px "Barlow Semi Condensed",Arial,sans-serif;color:var(--muted);text-align:center;margin-bottom:6px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:0 auto 16px;max-width:320px}
+.bar i{display:block;height:100%;background:var(--blue);transition:width .3s linear}
+.prompt{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;font:600 19px/1.35 "Barlow Semi Condensed",Arial,sans-serif}
+.prompt .small{font:400 15px/1.45 Barlow,Arial,sans-serif;color:var(--muted);display:block;margin-top:6px}
 .opts{display:grid;gap:8px}
 .opt{text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:12px 14px;font:600 16px/1.3 Barlow,Arial,sans-serif;cursor:pointer}
 .opt:hover:not(:disabled){border-color:var(--blue)}
 .opt.right{border-color:var(--ok);background:var(--ok-bg)}
 .opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.sel{border-color:var(--blue);background:var(--sel-bg)}
 .opt:disabled{cursor:default}
-.signopts{grid-template-columns:repeat(2,1fr)}
-.signopts .opt{display:flex;justify-content:center;padding:14px}
-.signopts .opt .sign{width:min(30vw,120px)}
-.question{font:700 21px/1.3 "Barlow Semi Condensed",Arial,sans-serif;margin:0 0 14px}
-.feedback{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--bg)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:start}
-.tile .nr{color:var(--muted);font:600 13px "Barlow Semi Condensed",Arial,sans-serif}
-.tile h3{font:700 17px/1.15 "Barlow Semi Condensed",Arial,sans-serif;margin:0 0 4px}
-.tile p{margin:0;font-size:14px;color:var(--muted)}
-.section-h{font:700 20px "Barlow Semi Condensed",Arial,sans-serif;margin:24px 0 10px}
+.imgopts{grid-template-columns:repeat(2,1fr)}
+.imgopts .opt{display:flex;justify-content:center;padding:12px}
+.imgopts .opt svg{width:min(28vw,110px);height:auto}
+.sixopts{grid-template-columns:repeat(3,1fr)}
+.sixopts .opt svg{width:min(22vw,90px)}
+.feedback{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--line)}
 .result{text-align:center}
 .result .big{font:800 56px/1 "Barlow Semi Condensed",Arial,sans-serif}
-.misses{text-align:left;margin-top:14px}
-.misses li{margin-bottom:4px}
-.tip{font-size:14px;color:var(--muted);margin-top:28px;max-width:60ch}
+.timer{text-align:center;font:700 20px "Barlow Semi Condensed",Arial,sans-serif;margin-bottom:4px}
+.persons{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.pcard{display:grid;grid-template-columns:60px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-top:4px solid #b3121f;border-radius:10px;padding:12px}
+.pcard .wanted{font:800 12px "Barlow Semi Condensed",Arial,sans-serif;letter-spacing:.12em;color:#b3121f}
+.pcard h3{margin:0 0 4px;font:700 18px "Barlow Semi Condensed",Arial,sans-serif}
+.pcard dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:1px 8px;font-size:14px}
+.pcard dt{color:var(--muted)}
+.pcard dd{margin:0}
+.scene>svg{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
+.readtext{font-size:17px;line-height:1.65}
+.eqs{font:700 26px/1.7 "Barlow Semi Condensed",Arial,sans-serif;text-align:center;margin:6px 0}
+.s0{color:#c8102e}.s1{color:#0b5ea8}.s2{color:#1d7a3e}.s3{color:#b8860b}.s4{color:#7a3fb0}
+.figrow{display:flex;gap:5px;justify-content:center;margin-top:10px}
+.figrow svg{width:min(14vw,68px);height:auto}
+.flow{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:10px;font:600 17px Barlow,Arial,sans-serif}
+.fbox{border:2px solid var(--ink);border-radius:8px;padding:5px 16px;background:var(--bg)}
+.fdia{border:2px dashed var(--blue);border-radius:6px;padding:6px 12px;text-align:center}
+.fsplit{display:flex;gap:22px}
+.fsplit>div{display:flex;flex-direction:column;align-items:center;gap:2px}
+.fsplit small{color:var(--muted);font-weight:700}
+.arr{color:var(--muted);line-height:1}
+.tscroll{overflow-x:auto}
+.dtable{border-collapse:collapse;margin:10px 0 0;font:500 15px Barlow,Arial,sans-serif;min-width:320px}
+.dtable th,.dtable td{border:1px solid var(--line);padding:5px 9px;text-align:center}
+.dtable th{background:var(--bg)}
+.rules{margin:0;padding-left:20px}
+.rules li{margin-bottom:8px}
+.blitz{display:flex;gap:10px;justify-content:center;padding:20px 0}
+.blitz svg{width:min(26vw,120px);height:auto}
+.foot{font-size:14px;color:var(--muted);margin-top:30px;max-width:62ch}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Verkehrszeichen-Trainer</h1>
-  <p class="lead">Die wichtigsten Verkehrszeichen mit Nummer, Namen und Bedeutung – zum Lernen für den Einstellungstest bei der Polizei.</p>
-  <nav class="tabs" id="tabs"></nav>
-  <div class="cats" id="cats"></div>
-  <main id="main"></main>
-  <p class="tip">Lerntipp: Erst die Übersicht einer Gruppe ansehen, dann mit den Karteikarten üben, zum Schluss beide Quiz-Varianten. Täglich 10 Minuten bringen mehr als einmal eine Stunde. Die Zeichen sind vereinfacht gezeichnet – zum Abgleich lohnt sich ein Blick in die Anlagen 1–3 der StVO.</p>
+  <main id="app"></main>
 </div>
 <script>
 const R='#c8102e',B='#0b5ea8',Y='#f5c400',G='#16823a',F='font-family="Arial,Helvetica,sans-serif" text-anchor="middle"';
@@ -99,7 +114,7 @@ const blueS=i=>`<rect x="7" y="7" width="86" height="86" rx="6" fill="${B}" stro
 const up=(x,c)=>`<path d="M${x} 74 L${x} 40" stroke="${c}" stroke-width="7"/><polygon points="${x},25 ${x-9},42 ${x+9},42" fill="${c}"/>`;
 const down=(x,c)=>`<path d="M${x} 26 L${x} 60" stroke="${c}" stroke-width="7"/><polygon points="${x},75 ${x-9},58 ${x+9},58" fill="${c}"/>`;
 const stripes=(id,shape,col,w,offs)=>`<clipPath id="${id}">${shape}</clipPath><g clip-path="url(#${id})" stroke="${col}" stroke-width="${w}">${offs.map(k=>`<line x1="0" y1="${100+k}" x2="${100+k}" y2="0"/>`).join('')}</g>`;
-const car=(x,c)=>`<rect x="${x}" y="38" width="20" height="26" rx="5" fill="${c}"/><rect x="${x+3}" y="42" width="14" height="8" rx="2" fill="#fff"/><rect x="${x+1}" y="61" width="5" height="8" fill="${c}"/><rect x="${x+14}" y="61" width="5" height="8" fill="${c}"/>`;
+const scar=(x,c)=>`<rect x="${x}" y="38" width="20" height="26" rx="5" fill="${c}"/><rect x="${x+3}" y="42" width="14" height="8" rx="2" fill="#fff"/><rect x="${x+1}" y="61" width="5" height="8" fill="${c}"/><rect x="${x+14}" y="61" width="5" height="8" fill="${c}"/>`;
 const round3=()=>{const a=`<path d="M58.6 73.5 A25 25 0 0 0 75 50" fill="none" stroke="#fff" stroke-width="7"/><polygon points="75,39 68,52 82,52" fill="#fff"/>`;return [0,120,240].map(r=>`<g transform="rotate(${r} 50 50)">${a}</g>`).join('')};
 
 const SIGNS=[
@@ -140,7 +155,7 @@ const SIGNS=[
  {nr:'274.1',cat:'Vorschriftzeichen',name:'Beginn einer Tempo 30-Zone',meaning:'Ab hier gilt in der ganzen Zone höchstens 30 km/h.',
   s:`<rect x="12" y="4" width="76" height="92" rx="6" fill="#fff" stroke="#111" stroke-width="2.5"/><circle cx="50" cy="38" r="25" fill="#fff" stroke="${R}" stroke-width="6"/><text x="50" y="47" ${F} font-size="24" font-weight="700" fill="#111">30</text><text x="50" y="84" ${F} font-size="18" font-weight="800" fill="#111">ZONE</text>`},
  {nr:'276',cat:'Vorschriftzeichen',name:'Überholverbot für Kraftfahrzeuge aller Art',meaning:'Kraftfahrzeuge dürfen keine mehrspurigen Kraftfahrzeuge (und Motorräder mit Beiwagen) überholen.',
-  s:redC(car(26,R)+car(54,'#111'))},
+  s:redC(scar(26,R)+scar(54,'#111'))},
  {nr:'278',cat:'Vorschriftzeichen',name:'Ende der zulässigen Höchstgeschwindigkeit',meaning:'Die vorher angeordnete Höchstgeschwindigkeit (hier 50 km/h) gilt nicht mehr.',
   s:`<circle cx="50" cy="50" r="43" fill="#fff" stroke="#8a8f95" stroke-width="2"/><text x="50" y="63" ${F} font-size="36" font-weight="700" fill="#8a8f95">50</text>`+stripes('c278','<circle cx="50" cy="50" r="41"/>','#555',2.5,[-10,0,10])},
  {nr:'282',cat:'Vorschriftzeichen',name:'Ende sämtlicher Streckenverbote',meaning:'Alle vorher angeordneten Geschwindigkeitsbegrenzungen und Überholverbote enden.',
@@ -167,86 +182,324 @@ const SIGNS=[
   s:blueS(`<rect x="43" y="38" width="14" height="48" fill="#fff"/><rect x="22" y="20" width="56" height="17" fill="${R}"/>`)}
 ];
 
-const CATS=['Alle','Gefahrzeichen','Vorschriftzeichen','Richtzeichen'];
-const MODES=[['overview','Übersicht'],['cards','Karteikarten'],['qname','Quiz: Name'],['qmean','Quiz: Bedeutung']];
-let mode='overview',cat='Alle',st={};
-const $=id=>document.getElementById(id);
-const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const pool=()=>cat==='Alle'?SIGNS:SIGNS.filter(s=>s.cat===cat);
-const signHTML=s=>`<div class="sign">${svg(s.s)}</div>`;
-const esc=t=>t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 
-function renderNav(){
-  $('tabs').innerHTML=MODES.map(([k,l])=>`<button aria-pressed="${k===mode}" data-m="${k}">${l}</button>`).join('');
-  $('cats').innerHTML=CATS.map(c=>`<button aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join('');
-}
-$('tabs').onclick=e=>{const m=e.target.dataset.m;if(m){mode=m;start()}};
-$('cats').onclick=e=>{const c=e.target.dataset.c;if(c){cat=c;start()}};
+const $=s=>document.querySelector(s);
+const app=()=>document.getElementById('app');
+const rnd=n=>Math.floor(Math.random()*n);
+const pick=a=>a[rnd(a.length)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const sample=(a,k)=>shuffle(a).slice(0,k);
+const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+const sv=(inner,vb='0 0 100 100')=>`<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${inner}</svg>`;
+function Q(html,correct,wrongs,ex,cls){const opts=shuffle([correct,...wrongs]);return{html,opts,ok:opts.indexOf(correct),ex,cls}}
+function near(ans,k,min=0){const c=shuffle(range(Math.max(min,ans-6),ans+6).filter(x=>x!==ans));return c.slice(0,k).map(String)}
+function getBest(id){try{return JSON.parse(localStorage.getItem('pt-best')||'{}')[id]}catch(e){return null}}
+function setBest(id,p){try{const o=JSON.parse(localStorage.getItem('pt-best')||'{}');if(o[id]==null||p>o[id]){o[id]=p;localStorage.setItem('pt-best',JSON.stringify(o))}}catch(e){}}
+let TIMER=null;const stopTimer=()=>{clearInterval(TIMER);TIMER=null};
+const head=m=>`<div class="modhead"><button class="back" onclick="home()">← Übersicht</button><h2>${m.title}</h2></div>`;
 
-function start(){
-  renderNav();
-  if(mode==='cards'){st={deck:shuffle(pool()),i:0,flip:false,known:0,total:pool().length}}
-  if(mode==='qname'||mode==='qmean'){st={qs:shuffle(pool()),i:0,score:0,done:false,miss:[]}}
-  render();
-}
-
-function render(){
-  const m=$('main');
-  if(mode==='overview'){
-    const groups=cat==='Alle'?CATS.slice(1):[cat];
-    m.innerHTML=groups.map(g=>`<h2 class="section-h">${g}</h2><div class="grid">${SIGNS.filter(s=>s.cat===g).map(s=>`<div class="tile">${signHTML(s)}<div><div class="nr">Zeichen ${s.nr}</div><h3>${esc(s.name)}</h3><p>${esc(s.meaning)}</p></div></div>`).join('')}</div>`).join('');
-    return;
-  }
-  if(mode==='cards'){
-    if(st.i>=st.deck.length){
-      m.innerHTML=`<div class="card result"><div class="big">Geschafft</div><p>Alle ${st.total} Zeichen sitzen – jedes mindestens einmal gewusst.</p><div class="btnrow"><button class="btn" id="re">Noch einmal durchgehen</button></div></div>`;
-      $('re').onclick=start;return;
+/* ---------- Quiz-Engine ---------- */
+function runQuiz(m,qs,restart){
+  let i=0,score=0,picked=null;
+  function r(){
+    if(i>=qs.length){
+      const p=Math.round(score/qs.length*100);setBest(m.id,p);
+      app().innerHTML=head(m)+`<div class="card result"><div class="big">${score}/${qs.length}</div><p>${p===100?'Alles richtig!':p>=70?'Gut gemacht – weiter so.':'Noch eine Runde lohnt sich.'}</p><div class="btnrow"><button class="btn" id="again">Neue Runde</button><button class="btn ghost" onclick="home()">Zur Übersicht</button></div></div>`;
+      $('#again').onclick=restart;return;
     }
-    const s=st.deck[st.i];
-    m.innerHTML=`<div class="progress">${st.known} von ${st.total} gewusst</div><div class="bar"><i style="width:${st.known/st.total*100}%"></i></div>
-    <div class="stage">${signHTML(s)}<div class="post"></div></div>
-    ${st.flip?`<div class="card answer"><div class="nr">Zeichen ${s.nr} · ${s.cat}</div><h2>${esc(s.name)}</h2><p>${esc(s.meaning)}</p>
-      <div class="btnrow"><button class="btn again" id="no">Nochmal üben</button><button class="btn good" id="yes">Gewusst</button></div></div>`
-    :`<div class="card" style="text-align:center"><p style="margin:0 0 4px">Wie heißt dieses Zeichen und was bedeutet es? Erst laut sagen, dann aufdecken.</p><div class="btnrow"><button class="btn" id="flip">Aufdecken</button></div></div>`}`;
-    if(st.flip){
-      $('yes').onclick=()=>{st.known++;st.i++;st.flip=false;render()};
-      $('no').onclick=()=>{const c=st.deck.splice(st.i,1)[0];st.deck.splice(Math.min(st.i+3,st.deck.length),0,c);st.flip=false;render()};
-    } else $('flip').onclick=()=>{st.flip=true;render()};
-    return;
+    const q=qs[i],cls=k=>picked==null?'':k===q.ok?'right':k===picked?'wrong':'';
+    app().innerHTML=head(m)+`<div class="progress">Frage ${i+1} von ${qs.length} · ${score} richtig</div><div class="bar"><i style="width:${i/qs.length*100}%"></i></div>
+    <div class="prompt">${q.html}</div>
+    <div class="opts ${q.cls||''}">${q.opts.map((o,k)=>`<button class="opt ${cls(k)}" data-k="${k}" ${picked!=null?'disabled':''}>${o}</button>`).join('')}</div>
+    ${picked==null?'':`<div class="feedback"><strong>${picked===q.ok?'Richtig.':'Leider falsch.'}</strong>${q.ex?' '+q.ex:''}</div><div class="btnrow"><button class="btn" id="next">Weiter</button></div>`}`;
+    app().querySelectorAll('.opt').forEach(b=>b.onclick=()=>{picked=+b.dataset.k;if(picked===q.ok)score++;r()});
+    if(picked!=null)$('#next').onclick=()=>{i++;picked=null;r();window.scrollTo(0,0)};
   }
-  // Quiz
-  if(st.i>=st.qs.length){
-    const n=st.qs.length;
-    m.innerHTML=`<div class="card result"><div class="big">${st.score}/${n}</div><p>${st.score===n?'Alles richtig!':st.score>=n*0.8?'Fast alles – die Fehler noch einmal üben.':'Die folgenden Zeichen solltest du wiederholen:'}</p>
-    ${st.miss.length?`<ul class="misses">${st.miss.map(s=>`<li><strong>Zeichen ${s.nr}:</strong> ${esc(s.name)}</li>`).join('')}</ul>`:''}
-    <div class="btnrow">${st.miss.length?'<button class="btn" id="miss">Nur Fehler üben</button>':''}<button class="btn ghost" id="re">Neues Quiz</button></div></div>`;
-    $('re').onclick=start;
-    if(st.miss.length)$('miss').onclick=()=>{st={qs:shuffle(st.miss),i:0,score:0,miss:[]};render()};
-    return;
-  }
-  const s=st.qs[st.i];
-  if(!st.opts){
-    const same=shuffle(SIGNS.filter(x=>x!==s&&x.cat===s.cat)),other=shuffle(SIGNS.filter(x=>x!==s&&x.cat!==s.cat));
-    st.opts=shuffle([s,...[...same,...other].slice(0,3)]);st.picked=null;
-  }
-  const head=`<div class="progress">Frage ${st.i+1} von ${st.qs.length} · ${st.score} richtig</div><div class="bar"><i style="width:${st.i/st.qs.length*100}%"></i></div>`;
-  const cls=o=>st.picked==null?'':o===s?'right':o===st.picked?'wrong':'';
-  const fb=st.picked==null?'':`<div class="feedback"><strong>${st.picked===s?'Richtig.':'Nicht ganz.'}</strong> Zeichen ${s.nr} „${esc(s.name)}“: ${esc(s.meaning)}</div><div class="btnrow"><button class="btn" id="next">Weiter</button></div>`;
-  if(mode==='qname'){
-    m.innerHTML=head+`<div class="stage">${signHTML(s)}<div class="post"></div></div><p class="question">Wie heißt dieses Zeichen?</p>
-    <div class="opts">${st.opts.map((o,k)=>`<button class="opt ${cls(o)}" data-k="${k}" ${st.picked!=null?'disabled':''}>${esc(o.name)}</button>`).join('')}</div>${fb}`;
-  } else {
-    m.innerHTML=head+`<div class="card"><p class="question" style="margin:0">${esc(s.meaning)}</p></div><p style="color:var(--muted);margin:12px 0 10px">Welches Zeichen passt?</p>
-    <div class="opts signopts">${st.opts.map((o,k)=>`<button class="opt ${cls(o)}" data-k="${k}" aria-label="Option ${k+1}" ${st.picked!=null?'disabled':''}>${signHTML(o)}</button>`).join('')}</div>${fb}`;
-  }
-  m.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
-    st.picked=st.opts[+b.dataset.k];
-    if(st.picked===s)st.score++;else st.miss.push(s);
-    render();
-  });
-  if(st.picked!=null)$('next').onclick=()=>{st.i++;st.opts=null;render()};
+  r();
 }
-start();
+function timeLabel(t){return t%60===0?(t===60?'1 Minute':t/60+' Minuten'):t+' Sekunden'}
+function chooseTime(m,intro,times,def,cb){
+  app().innerHTML=head(m)+`<div class="card"><p>${intro}</p><p class="muted">Zeit zum Einprägen:</p><div class="btnrow">${times.map(t=>`<button class="btn ${t===def?'':'ghost'}" data-t="${t}">${timeLabel(t)}</button>`).join('')}</div></div>`;
+  app().querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>cb(+b.dataset.t));
+}
+function study(m,html,secs,done){
+  stopTimer();let left=secs;
+  app().innerHTML=head(m)+`<div class="timer"><span id="tleft">${left}</span> Sekunden</div><div class="bar"><i id="tbar" style="width:100%"></i></div><div>${html}</div><div class="btnrow"><button class="btn" id="fin">Fertig – zu den Fragen</button></div>`;
+  const end=()=>{stopTimer();window.scrollTo(0,0);done()};
+  $('#fin').onclick=end;
+  TIMER=setInterval(()=>{left--;if(left<=0)return end();$('#tleft').textContent=left;$('#tbar').style.width=(left/secs*100)+'%'},1000);
+}
+
+/* ---------- Gedächtnis: Steckbriefe ---------- */
+const FN=['Lena','Murat','Sophie','Jonas','Aylin','David','Mia','Karim','Nina','Paul','Elif','Tobias','Sara','Lukas','Jana','Mehmet'];
+const LN=['Becker','Yılmaz','Wagner','Hoffmann','Schulz','Kaya','Richter','Neumann','Krüger','Wolf','Demir','Lange','Braun','Zimmermann'];
+const HAIR=[['schwarz','#1d1d1d'],['blond','#e3c16f'],['braun','#6b4226'],['rot','#b5461f'],['grau','#9a9a9a']];
+const EYES=['blau','braun','grün','grau'];
+const MERK=['Tattoo am linken Unterarm','Narbe an der Wange','trägt eine Brille','Piercing in der Augenbraue','Muttermal am Hals','Zahnlücke','hinkt leicht','Tattoo am Handrücken'];
+const DEL=['Ladendiebstahl','Betrug','Wohnungseinbruch','Sachbeschädigung','Fahrerflucht','Taschendiebstahl','Hehlerei','Urkundenfälschung'];
+const ORTE=['Köln','Bonn','Düsseldorf','Essen','Münster','Aachen','Dortmund','Leverkusen'];
+function makePersons(){
+  const f=sample(FN,4),l=sample(LN,4),h=sample(HAIR,4),e=sample(EYES,4),mk=sample(MERK,4),d=sample(DEL,4),o=sample(ORTE,4),a=sample(range(19,59),4),g=sample(range(158,197),4);
+  return f.map((x,i)=>({name:x+' '+l[i],hair:h[i],eye:e[i],merk:mk[i],del:d[i],ort:o[i],age:a[i],h:g[i]}));
+}
+function avatar(p){
+  const glasses=p.merk==='trägt eine Brille'?`<circle cx="40" cy="48" r="7" fill="none" stroke="#222" stroke-width="2.5"/><circle cx="60" cy="48" r="7" fill="none" stroke="#222" stroke-width="2.5"/><path d="M47 48 L53 48" stroke="#222" stroke-width="2.5"/>`:'';
+  return sv(`<rect width="100" height="100" rx="10" fill="#dfe3e8"/><path d="M18 100 Q50 64 82 100 Z" fill="#6c7a89"/><circle cx="50" cy="48" r="22" fill="#e2b48c"/><path d="M27 44 Q30 18 50 20 Q72 18 73 44 Q66 30 50 30 Q34 30 27 44 Z" fill="${p.hair[1]}"/><circle cx="41" cy="48" r="2.2" fill="#222"/><circle cx="59" cy="48" r="2.2" fill="#222"/><path d="M44 60 Q50 64 56 60" fill="none" stroke="#7a4a36" stroke-width="2"/>${glasses}`);
+}
+const steckHTML=P=>`<div class="persons">${P.map(p=>`<div class="pcard">${avatar(p)}<div><div class="wanted">GESUCHT</div><h3>${p.name}</h3><dl><dt>Alter</dt><dd>${p.age} Jahre</dd><dt>Größe</dt><dd>${p.h} cm</dd><dt>Haare</dt><dd>${p.hair[0]}</dd><dt>Augen</dt><dd>${p.eye}</dd><dt>Merkmal</dt><dd>${p.merk}</dd><dt>Gesucht wegen</dt><dd>${p.del}</dd><dt>Zuletzt gesehen</dt><dd>${p.ort}</dd></dl></div></div>`).join('')}</div>`;
+const others=(P,p,f)=>P.filter(x=>x!==p).map(f);
+const STQ=[
+  P=>{const p=pick(P);return Q(`Wer wird wegen <b>${p.del}</b> gesucht?`,p.name,others(P,p,x=>x.name))},
+  P=>{const p=pick(P);return Q(`Wer wurde zuletzt in <b>${p.ort}</b> gesehen?`,p.name,others(P,p,x=>x.name))},
+  P=>{const p=pick(P);return Q(`Welches besondere Merkmal hat <b>${p.name}</b>?`,p.merk,others(P,p,x=>x.merk))},
+  P=>{const p=pick(P);return Q(`Wie alt ist <b>${p.name}</b>?`,p.age+' Jahre',others(P,p,x=>x.age+' Jahre'))},
+  P=>{const p=pick(P);return Q(`Welche Haarfarbe hat <b>${p.name}</b>?`,p.hair[0],others(P,p,x=>x.hair[0]))},
+  P=>{const p=pick(P);return Q(`Wer ist <b>${p.h} cm</b> groß?`,p.name,others(P,p,x=>x.name))},
+  P=>{const p=pick(P);return Q(`Welche Augenfarbe hat <b>${p.name}</b>?`,p.eye,others(P,p,x=>x.eye))}
+];
+function startSteck(m){chooseTime(m,'Du siehst gleich vier Steckbriefe. Präge dir Namen, Aussehen und alle Angaben ein. Danach beantwortest du Fragen, ohne die Steckbriefe noch einmal zu sehen. Im Test hast du dafür etwa 30 Sekunden.',[30,60,120],30,t=>{const P=makePersons();study(m,steckHTML(P),t,()=>runQuiz(m,sample(STQ,6).map(f=>f(P)),()=>startSteck(m)))})}
+
+/* ---------- Gedächtnis: Verkehrssituation ---------- */
+const CARC=[['rot','#d0342c'],['blau','#2f6fd6'],['weiß','#f4f4f4'],['schwarz','#222222'],['grün','#2e9b4f'],['gelb','#f2c230'],['silber','#b8bec6']];
+const SCENE_SIGNS=['205','206','283','220','306','224','267','237'];
+const vCar=(x,y,c)=>`<g><rect x="${x}" y="${y+10}" width="56" height="15" rx="5" fill="${c}" stroke="#222" stroke-width="1.2"/><path d="M${x+12} ${y+10} L${x+18} ${y} L${x+40} ${y} L${x+48} ${y+10} Z" fill="${c}" stroke="#222" stroke-width="1.2"/><path d="M${x+19} ${y+2} L${x+28} ${y+2} L${x+28} ${y+10} L${x+15} ${y+10} Z M${x+31} ${y+2} L${x+39} ${y+2} L${x+45} ${y+10} L${x+31} ${y+10} Z" fill="#cfe6f7"/><circle cx="${x+14}" cy="${y+25}" r="6" fill="#111"/><circle cx="${x+44}" cy="${y+25}" r="6" fill="#111"/></g>`;
+const vTruck=(x,y)=>`<g><rect x="${x}" y="${y}" width="54" height="30" fill="#e8e8e8" stroke="#222" stroke-width="1.2"/><rect x="${x+54}" y="${y+10}" width="20" height="20" rx="3" fill="#3a6ea5" stroke="#222" stroke-width="1.2"/><rect x="${x+62}" y="${y+13}" width="9" height="8" fill="#cfe6f7"/><circle cx="${x+12}" cy="${y+32}" r="6" fill="#111"/><circle cx="${x+40}" cy="${y+32}" r="6" fill="#111"/><circle cx="${x+64}" cy="${y+32}" r="6" fill="#111"/></g>`;
+const vBike=(x,y)=>`<g fill="none" stroke="#222" stroke-width="2"><circle cx="${x}" cy="${y}" r="8"/><circle cx="${x+26}" cy="${y}" r="8"/><path d="M${x} ${y} L${x+10} ${y-10} L${x+22} ${y-10} L${x+26} ${y} M${x+10} ${y-10} L${x+13} ${y}"/><path d="M${x+11} ${y-12} L${x+14} ${y-26}" stroke="#c8102e" stroke-width="5"/><path d="M${x+14} ${y-22} L${x+22} ${y-12}" stroke="#c8102e" stroke-width="2.5"/></g><circle cx="${x+15}" cy="${y-31}" r="5" fill="#e2b48c"/>`;
+const vPed=(x,y,c)=>`<g stroke-linecap="round"><path d="M${x} ${y-8} L${x-4} ${y} M${x} ${y-8} L${x+4} ${y}" stroke="#333" stroke-width="3"/><path d="M${x} ${y-21} L${x} ${y-8}" stroke="${c}" stroke-width="6"/><path d="M${x-5} ${y-12} L${x} ${y-19} L${x+5} ${y-12}" stroke="${c}" stroke-width="2.5" fill="none"/><circle cx="${x}" cy="${y-26}" r="5" fill="#e2b48c"/></g>`;
+const signAt=(x,y,inner)=>`<rect x="${x+18}" y="${y+34}" width="4" height="${156-y-34}" fill="#8a9097"/><svg x="${x}" y="${y}" width="40" height="40" viewBox="0 0 100 100">${inner}</svg>`;
+const speedInner=v=>redC(`<text x="50" y="63" ${F} font-size="36" font-weight="700" fill="#111">${v}</text>`);
+function makeScene(){
+  const S={weather:pick(['sonnig','bewölkt','regnerisch']),truck:Math.random()<.5,bike:Math.random()<.5,nPed:rnd(4),zebra:Math.random()<.5,light:pick(['rot','gelb','grün',null]),house:pick([3,7,12,15,21,28,34,46,52,63,77,88]),sign:(n=>SIGNS.find(s=>s.nr===n))(pick(SCENE_SIGNS)),speed:Math.random()<.6?pick([30,50,70]):null};
+  const n=1+rnd(4);const slots=sample([12,82,152,222],n).sort((a,b)=>a-b);
+  S.cars=sample(CARC,n).map((c,i)=>({c,x:slots[i],y:Math.random()<.5?162:194}));
+  const sky={sonnig:'#bfe3ff',bewölkt:'#d3d9e0',regnerisch:'#aab4bf'}[S.weather];
+  let g=`<rect width="400" height="160" fill="${sky}"/>`;
+  if(S.weather==='sonnig')g+=`<circle cx="365" cy="28" r="17" fill="#ffd23f"/>`;
+  else g+=`<g fill="#f5f7fa"><ellipse cx="330" cy="28" rx="30" ry="12"/><ellipse cx="355" cy="20" rx="20" ry="12"/><ellipse cx="80" cy="22" rx="26" ry="10"/></g>`;
+  g+=`<rect x="20" y="52" width="115" height="92" fill="#d9a066" stroke="#7a5230"/><g fill="#cfe6f7" stroke="#7a5230">${[34,60,98].map(x=>`<rect x="${x}" y="62" width="18" height="18"/><rect x="${x}" y="88" width="18" height="18"/>`).join('')}</g><rect x="70" y="114" width="20" height="30" fill="#7a5230"/><rect x="69" y="102" width="22" height="10" fill="#fff" stroke="#333" stroke-width=".8"/><text x="80" y="110" ${F} font-size="8" font-weight="700" fill="#111">${S.house}</text>`;
+  g+=`<rect x="150" y="72" width="90" height="72" fill="#9fb4c7" stroke="#566"/><g fill="#eef4f8">${[160,184,208].map(x=>`<rect x="${x}" y="82" width="14" height="14"/><rect x="${x}" y="108" width="14" height="14"/>`).join('')}</g>`;
+  g+=`<rect y="144" width="400" height="14" fill="#c9c9c9"/><rect y="158" width="400" height="72" fill="#5a5d61"/><path d="M0 194 L400 194" stroke="#fff" stroke-width="2.5" stroke-dasharray="16 12"/><rect y="230" width="400" height="30" fill="#c9c9c9"/>`;
+  if(S.zebra)g+=`<g fill="#fff">${[162,174,186,198,210,222].map(y=>`<rect x="296" y="${y}" width="44" height="6"/>`).join('')}</g>`;
+  if(S.weather==='regnerisch')g+=`<g stroke="#6f8fb0" stroke-width="1.4">${range(0,24).map(i=>{const x=(i*37)%400,y=(i*53)%140;return `<path d="M${x} ${y} L${x-4} ${y+10}"/>`}).join('')}</g>`;
+  if(S.speed)g+=signAt(196,98,speedInner(S.speed));
+  g+=signAt(248,96,S.sign.s);
+  if(S.light){const on={rot:0,gelb:1,grün:2}[S.light],col=['#e3141f','#f5b800','#1a9a3a'];g+=`<rect x="357" y="90" width="4" height="66" fill="#555"/><rect x="350" y="58" width="18" height="40" rx="3" fill="#222"/>${[0,1,2].map(k=>`<circle cx="359" cy="${66+k*12}" r="4.6" fill="${k===on?col[k]:'#444'}"/>`).join('')}`}
+  const pc=['#2f6fd6','#c8102e','#2e9b4f'];for(let k=0;k<S.nPed;k++)g+=vPed([40,112,178][k],156,pc[k]);
+  S.cars.forEach(c=>g+=vCar(c.x,c.y,c.c[1]));
+  if(S.truck)g+=vTruck(300,188);
+  if(S.bike)g+=vBike(150,252);
+  S.svg=sv(g,'0 0 400 260');return S;
+}
+const yn=(html,v)=>Q(html,v?'Ja':'Nein',[v?'Nein':'Ja']);
+const SCQ=[
+  S=>Q('Wie viele <b>Autos</b> (ohne Lkw) waren zu sehen?',String(S.cars.length),sample(['1','2','3','4','5'].filter(x=>x!=S.cars.length),3)),
+  S=>{const c=S.cars[0].c[0];return Q('Welche Farbe hatte das Auto <b>ganz links</b>?',c,sample(CARC.map(x=>x[0]).filter(x=>x!==c),3))},
+  S=>{const w=sample(SIGNS.filter(x=>SCENE_SIGNS.includes(x.nr)&&x!==S.sign),3);const o=shuffle([S.sign,...w]);return{html:'Welches dieser Verkehrszeichen war zu sehen?',opts:o.map(x=>svg(x.s)),ok:o.indexOf(S.sign),cls:'imgopts'}},
+  S=>S.speed?Q('Welche <b>Höchstgeschwindigkeit</b> war angegeben?',S.speed+' km/h',['30 km/h','50 km/h','70 km/h','100 km/h'].filter(x=>x!==S.speed+' km/h').slice(0,3)):yn('War ein Schild mit einer <b>Höchstgeschwindigkeit</b> zu sehen?',false),
+  S=>Q('Was zeigte die <b>Ampel</b>?',S.light?S.light[0].toUpperCase()+S.light.slice(1):'Es war keine Ampel zu sehen',['Rot','Gelb','Grün','Es war keine Ampel zu sehen'].filter(x=>x.toLowerCase()!==(S.light||'es war keine ampel zu sehen'))),
+  S=>yn('War eine Person auf einem <b>Fahrrad</b> zu sehen?',S.bike),
+  S=>Q('Wie viele <b>Fußgänger</b> standen auf dem Gehweg?',String(S.nPed),['0','1','2','3'].filter(x=>x!=S.nPed)),
+  S=>Q('Welche <b>Hausnummer</b> war zu sehen?',String(S.house),sample([3,7,12,15,21,28,34,46,52,63,77,88].filter(x=>x!==S.house),3).map(String)),
+  S=>Q('Wie war das <b>Wetter</b>?',S.weather,['sonnig','bewölkt','regnerisch'].filter(x=>x!==S.weather)),
+  S=>yn('Gab es einen <b>Zebrastreifen</b>?',S.zebra),
+  S=>yn('War ein <b>Lkw</b> zu sehen?',S.truck)
+];
+function startScene(m){chooseTime(m,'Du siehst gleich ein Bild einer Verkehrssituation. Merke dir möglichst viele Details: Fahrzeuge und ihre Farben, Schilder, Ampel, Personen, Hausnummer, Wetter. Danach kommen Fragen zum Bild.',[30,60,180],60,t=>{const S=makeScene();study(m,`<div class="scene">${S.svg}</div>`,t,()=>runQuiz(m,sample(SCQ,7).map(f=>f(S)),()=>startScene(m)))})}
+
+/* ---------- Gedächtnis: Texte ---------- */
+const TX=[
+{t:'Am Dienstagmorgen gegen 7:45 Uhr kam es in Köln-Ehrenfeld an der Kreuzung Venloer Straße/Ehrenfeldgürtel zu einem Verkehrsunfall. Ein 34-jähriger Fahrer eines grauen Kleintransporters übersah beim Abbiegen eine 19-jährige Radfahrerin, die auf dem Radweg in Richtung Innenstadt unterwegs war. Die junge Frau stürzte und verletzte sich leicht am Knie. Rettungskräfte brachten sie vorsorglich in ein Krankenhaus. Am Transporter entstand ein Sachschaden von etwa 800 Euro. Zwei Zeugen, ein Busfahrer und eine Passantin mit Hund, schilderten der Polizei den Unfallhergang übereinstimmend. Die Kreuzung war für rund 40 Minuten nur eingeschränkt befahrbar.',
+q:[['Wann ereignete sich der Unfall?','Dienstag gegen 7:45 Uhr',['Dienstag gegen 8:45 Uhr','Donnerstag gegen 7:45 Uhr','Montag gegen 7:15 Uhr']],['Wie alt war der Fahrer des Transporters?','34 Jahre',['19 Jahre','43 Jahre','29 Jahre']],['Welche Farbe hatte der Kleintransporter?','grau',['weiß','silbern','blau']],['Wo verletzte sich die Radfahrerin?','am Knie',['am Arm','am Kopf','an der Schulter']],['Wie hoch war der Sachschaden am Transporter?','etwa 800 Euro',['etwa 500 Euro','etwa 1.800 Euro','etwa 8.000 Euro']],['Wer schilderte den Unfallhergang?','ein Busfahrer und eine Passantin mit Hund',['zwei Radfahrer','ein Taxifahrer und ein Kind','eine Busfahrerin und ein Passant']],['Wie lange war die Kreuzung eingeschränkt befahrbar?','rund 40 Minuten',['rund 20 Minuten','rund eine Stunde','rund 14 Minuten']]]},
+{t:'Am Samstagnachmittag wurde einer 67-jährigen Frau in der Straßenbahnlinie 9 zwischen Neumarkt und Heumarkt die Geldbörse aus der Handtasche gestohlen. Die Frau bemerkte den Diebstahl erst beim Einkaufen in einer Bäckerei. In der Geldbörse befanden sich rund 120 Euro Bargeld, ihr Personalausweis und eine Monatskarte. Eine Zeugin beobachtete einen etwa 25 Jahre alten Mann mit grüner Kapuzenjacke und weißen Turnschuhen, der sich auffällig nah an die Frau gedrängt hatte. Der Mann stieg am Heumarkt aus. Die Polizei rät, Wertsachen in verschlossenen Innentaschen zu tragen und Taschen im Gedränge vor dem Körper zu halten.',
+q:[['Wie alt war die bestohlene Frau?','67 Jahre',['76 Jahre','57 Jahre','62 Jahre']],['In welchem Verkehrsmittel wurde sie bestohlen?','Straßenbahnlinie 9',['Buslinie 9','Straßenbahnlinie 7','Straßenbahnlinie 19']],['Wo bemerkte sie den Diebstahl?','in einer Bäckerei',['in der Straßenbahn','in einer Apotheke','an der Haltestelle']],['Wie viel Bargeld war in der Geldbörse?','rund 120 Euro',['rund 20 Euro','rund 210 Euro','rund 100 Euro']],['Was trug der verdächtige Mann?','eine grüne Kapuzenjacke',['eine graue Kapuzenjacke','eine grüne Lederjacke','einen schwarzen Mantel']],['Wo stieg der Mann aus?','am Heumarkt',['am Neumarkt','am Hauptbahnhof','am Rudolfplatz']],['Was war NICHT in der Geldbörse?','ein Führerschein',['ein Personalausweis','eine Monatskarte','Bargeld']]]},
+{t:'In der Nacht zu Donnerstag drangen Unbekannte in eine Gartenlaube in einer Kleingartenanlage in Köln-Nippes ein. Die Täter hebelten die Tür mit einem Werkzeug auf und nahmen einen Rasenmäher, zwei Fahrräder und eine Musikbox mit. Der 52-jährige Besitzer entdeckte den Einbruch am Donnerstag gegen 10 Uhr. Eine Nachbarin hatte gegen 2 Uhr nachts einen dunklen Kombi mit laufendem Motor vor der Anlage bemerkt. Der Gesamtschaden wird auf etwa 2.300 Euro geschätzt. Die Polizei bittet Zeuginnen und Zeugen, sich zu melden.',
+q:[['Wann wurde eingebrochen?','in der Nacht zu Donnerstag',['in der Nacht zu Dienstag','am Donnerstagabend','in der Nacht zu Freitag']],['In welchem Stadtteil liegt die Kleingartenanlage?','Nippes',['Ehrenfeld','Sülz','Mülheim']],['Was wurde NICHT gestohlen?','ein Laptop',['ein Rasenmäher','zwei Fahrräder','eine Musikbox']],['Wie alt ist der Besitzer der Laube?','52 Jahre',['25 Jahre','42 Jahre','58 Jahre']],['Was bemerkte die Nachbarin gegen 2 Uhr?','einen dunklen Kombi mit laufendem Motor',['einen hellen Transporter','zwei Personen mit Taschenlampen','einen dunklen Kombi ohne Licht']],['Wie hoch wird der Schaden geschätzt?','etwa 2.300 Euro',['etwa 3.200 Euro','etwa 1.300 Euro','etwa 2.000 Euro']],['Wie öffneten die Täter die Tür?','Sie hebelten sie mit einem Werkzeug auf.',['Sie schlugen die Scheibe ein.','Sie hatten einen Schlüssel.','Sie traten die Tür ein.']]]}
+];
+let lastText=-1;
+function startTexte(m){chooseTime(m,'Du liest gleich eine kurze Meldung. Achte auf Zeiten, Orte, Zahlen, Personen und Gegenstände. Danach beantwortest du Fragen, ohne den Text noch einmal zu sehen.',[60,90,120],90,t=>{let k;do{k=rnd(TX.length)}while(k===lastText&&TX.length>1);lastText=k;const T=TX[k];study(m,`<div class="card readtext">${T.t}</div>`,t,()=>runQuiz(m,sample(T.q,5).map(x=>Q(x[0],x[1],x[2])),()=>startTexte(m)))})}
+
+/* ---------- Logik ---------- */
+const SYM=['▲','●','■','◆','★'];
+function genSym(){
+  const idx=sample([0,1,2,3,4],3),v=sample(range(1,9),3),s=idx.map(i=>`<span class="s${i}">${SYM[i]}</span>`);
+  const [a,b,c]=s,[va,vb,vc]=v,t=rnd(3);
+  const e3=t===0?`${b} + ${c} = ${vb+vc}`:t===1?`${b} × ${c} = ${vb*vc}`:(vc>vb?`${c} − ${b} = ${vc-vb}`:`${b} − ${c} = ${vb-vc}`);
+  const all=rnd(2)===1,ans=all?va+vb+vc:vc;
+  return Q(`Jedes Symbol steht für eine Zahl von 1 bis 9.<div class="eqs">${a} + ${a} = ${va*2}<br>${a} + ${b} = ${va+vb}<br>${e3}<br>${all?`${a} + ${b} + ${c} = ?`:`${c} = ?`}</div>`,String(ans),near(ans,3,1),`${SYM[idx[0]]} = ${va}, ${SYM[idx[1]]} = ${vb}, ${SYM[idx[2]]} = ${vc}. Tipp: Immer mit der Gleichung anfangen, in der nur ein Symbol vorkommt.`);
+}
+const POS=[[20,20],[50,20],[80,20],[80,50],[80,80],[50,80],[20,80],[20,50]],SH=['circle','triangle','square','diamond'];
+function fig(o){
+  const [x,y]=POS[o.p],f=o.fill?'#1d2228':'#fff',st='stroke="#1d2228" stroke-width="3"';
+  const sh={circle:`<circle cx="50" cy="50" r="12" fill="${f}" ${st}/>`,triangle:`<polygon points="50,36 63,62 37,62" fill="${f}" ${st}/>`,square:`<rect x="39" y="39" width="22" height="22" fill="${f}" ${st}/>`,diamond:`<polygon points="50,35 65,50 50,65 35,50" fill="${f}" ${st}/>`}[o.sh];
+  return sv(`<rect x="5" y="5" width="90" height="90" rx="6" fill="#fff" stroke="#8a9097" stroke-width="2"/>${sh}<circle cx="${x}" cy="${y}" r="7" fill="#c8102e"/>`);
+}
+function genFig(){
+  const p0=rnd(8),s=pick([1,2,3,7]),L=pick([2,3]),shs=sample(SH,L),alt=Math.random()<.5,f0=Math.random()<.5;
+  const st=i=>({p:(p0+s*i)%8,sh:shs[i%L],fill:alt?(i%2===0)===f0:f0});
+  const ans=st(4),other=SH.find(x=>x!==ans.sh);
+  const cand=[{...ans,p:(ans.p+1)%8},{...ans,sh:other},{...ans,fill:!ans.fill},{...ans,p:(ans.p+4)%8}];
+  const w=sample(cand,3).map(fig);
+  const dir=s===7?'eine Position gegen den Uhrzeigersinn':`${s} Position${s>1?'en':''} im Uhrzeigersinn`;
+  return Q(`Welche Figur setzt die Reihe fort?<div class="figrow">${[0,1,2,3].map(i=>fig(st(i))).join('')}${sv('<rect x="5" y="5" width="90" height="90" rx="6" fill="none" stroke="#8a9097" stroke-width="2" stroke-dasharray="6 5"/><text x="50" y="64" font-family="Arial" font-size="40" font-weight="700" text-anchor="middle" fill="#8a9097">?</text>')}</div>`,fig(ans),w,`Der rote Punkt wandert jeweils ${dir}. Die Form in der Mitte wechselt in fester Reihenfolge${alt?', und die Füllung wechselt jedes Mal zwischen hell und dunkel':''}.`,'imgopts');
+}
+function genFlow(){
+  const n=2+rnd(14);
+  const mk=()=>{const o=pick(['+','−','×']),v=o==='×'?pick([2,3]):o==='+'?1+rnd(9):1+rnd(5);return{t:`${o} ${v}`,f:x=>o==='+'?x+v:o==='−'?x-v:x*v}};
+  const o1=mk(),oy=mk(),on=mk(),o3=mk(),even=Math.random()<.5,T=10+rnd(20);
+  const test=x=>even?x%2===0:x>T,ct=even?'Ist die Zahl gerade?':`Ist die Zahl größer als ${T}?`;
+  const x1=o1.f(n),yes=test(x1),x2=(yes?oy:on).f(x1),res=o3.f(x2),alt=o3.f((yes?on:oy).f(x1));
+  const w=[...new Set([alt,res+1,res-2,res+3,res-1].filter(x=>x!==res))].slice(0,3).map(String);
+  const box=t=>`<div class="fbox">${t}</div>`,ar='<div class="arr">↓</div>';
+  return Q(`Welches Ergebnis liefert das Flussdiagramm?<div class="flow">${box('Start: '+n)}${ar}${box(o1.t)}${ar}<div class="fdia">${ct}</div><div class="fsplit"><div><small>ja ↓</small>${box(oy.t)}</div><div><small>nein ↓</small>${box(on.t)}</div></div>${ar}${box(o3.t)}${ar}${box('Ergebnis = ?')}</div>`,String(res),w,`${n} ${o1.t} = ${x1}. Die Antwort auf die Frage ist „${yes?'ja':'nein'}“, also ${(yes?oy:on).t} = ${x2}. Dann ${o3.t} = ${res}.`);
+}
+const SYL=[
+['Alle Blipse sind Grolle.','Alle Grolle sind Fnaks.','Alle Blipse sind Fnaks.',true,''],
+['Alle Blipse sind Grolle.','Einige Grolle sind Fnaks.','Einige Blipse sind Fnaks.',false,'Die Grolle, die Fnaks sind, müssen keine Blipse sein.'],
+['Kein Polizist ist unpünktlich.','Alle Streifenbeamten sind Polizisten.','Kein Streifenbeamter ist unpünktlich.',true,''],
+['Alle Hunde sind Säugetiere.','Einige Säugetiere können schwimmen.','Einige Hunde können schwimmen.',false,'Die schwimmenden Säugetiere könnten auch andere Tiere sein.'],
+['Einige Autos sind rot.','Alle roten Dinge sind auffällig.','Einige Autos sind auffällig.',true,''],
+['Alle Zeugen waren am Tatort.','Herr B. war am Tatort.','Herr B. ist ein Zeuge.',false,'Am Tatort können auch Personen gewesen sein, die keine Zeugen sind.'],
+['Kein Vogel ist ein Fisch.','Alle Pinguine sind Vögel.','Kein Pinguin ist ein Fisch.',true,''],
+['Alle Mitarbeiter tragen einen Ausweis.','Frau K. trägt keinen Ausweis.','Frau K. ist keine Mitarbeiterin.',true,''],
+['Einige Schüler sind Sportler.','Einige Sportler sind Frühaufsteher.','Einige Schüler sind Frühaufsteher.',false,'Die Sportler, die früh aufstehen, müssen keine Schüler sein.'],
+['Alle Quadrate sind Rechtecke.','Kein Rechteck ist rund.','Kein Quadrat ist rund.',true,''],
+['Wenn es regnet, ist die Straße nass.','Die Straße ist nass.','Es hat geregnet.',false,'Die Straße kann auch aus einem anderen Grund nass sein.'],
+['Wenn es regnet, ist die Straße nass.','Die Straße ist nicht nass.','Es regnet nicht.',true,''],
+['Alle Zorbs sind blau.','Kein blaues Ding ist eckig.','Einige Zorbs sind eckig.',false,'Zorbs sind blau, und nichts Blaues ist eckig – also ist kein Zorb eckig.'],
+['Keine Katze ist ein Hund.','Einige Haustiere sind Katzen.','Einige Haustiere sind keine Hunde.',true,'']
+];
+const synQ=x=>Q(`<span class="small">${x[0]}<br>${x[1]}</span>Folgt daraus: „${x[2]}“?`,x[3]?'Ja, das folgt zwingend.':'Nein, das folgt nicht zwingend.',[x[3]?'Nein, das folgt nicht zwingend.':'Ja, das folgt zwingend.'],x[3]?'Die Schlussfolgerung ergibt sich zwingend aus den beiden Aussagen.':x[4]);
+const ANA=[
+['Arzt','Krankenhaus','Lehrer','Schule',['Buch','Schüler','Tafel']],['Hand','Handschuh','Fuß','Schuh',['Zeh','Bein','laufen']],['heiß','kalt','hell','dunkel',['warm','Licht','Sonne']],
+['Vogel','Nest','Biene','Bienenstock',['Honig','Blüte','Stachel']],['Auge','sehen','Ohr','hören',['riechen','Klang','Kopf']],['Polizei','Streifenwagen','Feuerwehr','Löschfahrzeug',['Schlauch','Brand','Helm']],
+['Kapitän','Schiff','Pilot','Flugzeug',['Flughafen','Himmel','Uniform']],['schnell','langsam','laut','leise',['Lärm','Musik','schreien']],['Wasser','durstig','Essen','hungrig',['satt','kochen','Teller']],
+['Minute','Stunde','Tag','Woche',['Uhr','Nacht','Morgen']],['Richter','Urteil','Arzt','Diagnose',['Patient','Praxis','Spritze']],['Schlüssel','Schloss','Passwort','Konto',['Tastatur','Hacker','Zahl']],
+['Kilometer','Entfernung','Kilogramm','Gewicht',['Waage','Länge','Liter']],['Maler','Pinsel','Schreiner','Hobel',['Holz','Werkstatt','Tisch']],['Gesetz','Parlament','Urteil','Gericht',['Polizei','Strafe','Anwalt']],
+['Winter','Schnee','Herbst','Laub',['Sonne','Kälte','Regenschirm']]
+];
+const anaQ=x=>Q(`<b>${x[0]}</b> verhält sich zu <b>${x[1]}</b> wie <b>${x[2]}</b> zu …?`,x[3],x[4],`${x[0]} : ${x[1]} = ${x[2]} : ${x[3]}`);
+function genData(){
+  const days=['Mo','Di','Mi','Do','Fr'],dn=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag'];
+  let A,B,t;
+  const uniq=a=>a.filter(x=>x===Math.max(...a)).length===1;
+  do{A=days.map(()=>10+rnd(31));B=days.map(()=>10+rnd(31));t=rnd(5)}while((t===0&&!uniq(A))||(t===2&&!uniq(A.map((x,i)=>Math.abs(x-B[i])))));
+  const tbl=`<div class="tscroll"><table class="dtable"><tr><th>Einsätze</th>${days.map(d=>`<th>${d}</th>`).join('')}</tr><tr><th>Wache Nord</th>${A.map(x=>`<td>${x}</td>`).join('')}</tr><tr><th>Wache Süd</th>${B.map(x=>`<td>${x}</td>`).join('')}</tr></table></div>`;
+  const wd=c=>sample(dn.filter(x=>x!==c),3);
+  if(t===0){const c=dn[A.indexOf(Math.max(...A))];return Q(`An welchem Tag hatte die <b>Wache Nord</b> die meisten Einsätze?${tbl}`,c,wd(c))}
+  if(t===1){const s=B.reduce((a,b)=>a+b,0);return Q(`Wie viele Einsätze hatte die <b>Wache Süd</b> insgesamt?${tbl}`,String(s),near(s,3,1),`${B.join(' + ')} = ${s}`)}
+  if(t===2){const d=A.map((x,i)=>Math.abs(x-B[i])),c=dn[d.indexOf(Math.max(...d))];return Q(`An welchem Tag war der <b>Unterschied</b> zwischen beiden Wachen am größten?${tbl}`,c,wd(c),`Unterschiede: ${d.join(', ')}`)}
+  if(t===3){const c=A.filter((x,i)=>x>B[i]).length;return Q(`An wie vielen Tagen hatte die <b>Wache Nord mehr</b> Einsätze als die Wache Süd?${tbl}`,String(c),sample(['0','1','2','3','4','5'].filter(x=>x!=c),3))}
+  const s=A[2]+B[2];return Q(`Wie viele Einsätze hatten <b>beide Wachen zusammen am Mittwoch</b>?${tbl}`,String(s),near(s,3,1),`${A[2]} + ${B[2]} = ${s}`);
+}
+const TM=[
+['Der Rhein fließt durch Köln.',1],['Köln ist die schönste Stadt Deutschlands.',0],['Innerorts gilt in Deutschland grundsätzlich eine Höchstgeschwindigkeit von 50 km/h.',1],['Tempo 30 in der ganzen Stadt wäre die beste Lösung für alle.',0],
+['Ein Jahr hat zwölf Monate.',1],['Wer früh aufsteht, arbeitet besser.',0],['Wasser gefriert bei 0 Grad Celsius.',1],['Polizeiarbeit ist der spannendste Beruf der Welt.',0],
+['Das Grundgesetz trat 1949 in Kraft.',1],['Schuluniformen würden das Klassenklima verbessern.',0],['Der Kölner Dom ist über 150 Meter hoch.',1],['Handys sollten an Schulen komplett verboten werden.',0],
+['Berlin ist die Hauptstadt Deutschlands.',1],['Radfahren macht mehr Spaß als Autofahren.',0],['Nordrhein-Westfalen ist das bevölkerungsreichste Bundesland.',1],['Die Strafen für Raser sind viel zu niedrig.',0],
+['Ein Fußballspiel dauert regulär zweimal 45 Minuten.',1],['Krimis sind langweilig.',0]
+];
+const tmQ=x=>Q(`„${x[0]}“`,x[1]?'Tatsache':'Meinung',[x[1]?'Meinung':'Tatsache'],x[1]?'Das lässt sich überprüfen – also eine Tatsache.':'Das ist eine Wertung oder Forderung – also eine Meinung.');
+
+/* ---------- Deutsch ---------- */
+const RS=[
+[null,'nämlich',['nähmlich','nämmlich'],'Ohne Dehnungs-h.'],[null,'Standard',['Standart','Standarrd'],'Standard endet auf -d.'],[null,'Rhythmus',['Rythmus','Rhytmus'],'Zweimal h: Rh-y-th-mus.'],
+[null,'Reparatur',['Reperatur','Reparratur'],'Von „reparieren“.'],[null,'tödlich',['tötlich','tödtlich'],'Von „Tod“, daher mit d.'],[null,'endgültig',['entgültig','endgültich'],'Von „Ende“, daher end-.'],
+[null,'Widerspruch',['Wiederspruch','Widerspruh'],'„wider“ bedeutet „gegen“, „wieder“ bedeutet „noch einmal“.'],[null,'Maschine',['Maschiene','Maschinne'],'Maschine schreibt man ohne ie.'],
+[null,'Entschädigung',['Endschädigung','Entschedigung'],'Vorsilbe ent-, und von „Schaden“ kommt das ä.'],[null,'Ermittlung',['Ermitlung','Ermittelung'],'ermitteln → Ermittlung.'],
+[null,'Adresse',['Addresse','Adrese'],'Ein d, zwei s.'],[null,'Vorfahrt',['Vorfart','Vohrfahrt'],'Von „fahren“, daher mit h.'],[null,'interessant',['interresant','interessannt'],'Ein r, zwei s, ein n am Ende.'],
+[null,'Fahrerflucht',['Fahrer Flucht','Fahrer-Flucht'],'Zusammengesetzte Nomen schreibt man zusammen.'],
+['Ich hoffe, ___ du pünktlich kommst.','dass',['das'],'„dass“ leitet einen Nebensatz ein. „das“ kann man durch „dieses“ oder „welches“ ersetzen.'],
+['Das Auto, ___ dort parkt, ist gestohlen.','das',['dass'],'Hier passt „welches“ – also „das“.'],['Wo ___ ihr gestern gewesen?','seid',['seit'],'„seid“ kommt von „sein“: ihr seid.'],
+['Er ist ___ Montag krankgeschrieben.','seit',['seid'],'„seit“ ist eine Zeitangabe.'],['Sie kam schon ___ zu spät.','wieder',['wider'],'„wieder“ bedeutet „erneut“.'],
+['Ich ___ nicht, wo er wohnt.','weiß',['weis'],'wissen → ich weiß (mit ß).'],['Beim ___ muss man aufmerksam sein.','Autofahren',['autofahren','Auto fahren'],'Nach „beim“ wird das Verb zum Nomen: das Autofahren.'],
+['Wir haben heute viel ___ gelernt.','Neues',['neues'],'Nach „viel“ wird das Adjektiv zum Nomen und großgeschrieben.']
+];
+const rsQ=x=>Q(x[0]?`Welches Wort passt?<span class="small">${x[0].replace('___','<b>____</b>')}</span>`:'Welche Schreibweise ist richtig?',x[1],x[2],x[3]);
+const ZS=[
+['Ich glaube, dass er lügt.',['Ich glaube dass er lügt.'],'Vor „dass“ steht ein Komma.'],
+['Der Mann, der den Unfall sah, meldete sich.',['Der Mann der den Unfall sah, meldete sich.','Der Mann, der den Unfall sah meldete sich.'],'Ein eingeschobener Relativsatz wird vorne und hinten mit Komma abgetrennt.'],
+['Als die Streife eintraf, war der Täter schon weg.',['Als die Streife eintraf war der Täter schon weg.'],'Nebensatz und Hauptsatz werden durch ein Komma getrennt.'],
+['Sie kaufte Brot, Käse und Milch.',['Sie kaufte Brot, Käse, und Milch.','Sie kaufte, Brot, Käse und Milch.'],'Vor „und“ steht in einer Aufzählung kein Komma.'],
+['Er rannte weg, weil er Angst hatte.',['Er rannte weg weil er Angst hatte.'],'Vor „weil“ steht ein Komma.'],
+['Die Zeugin sagte: „Ich habe nichts gesehen.“',['Die Zeugin sagte „Ich habe nichts gesehen.“','Die Zeugin sagte, „Ich habe nichts gesehen.“'],'Vor wörtlicher Rede steht ein Doppelpunkt.'],
+['Herr Meier, bitte kommen Sie mit.',['Herr Meier bitte kommen Sie mit.'],'Eine Anrede wird mit Komma abgetrennt.'],
+['Obwohl es regnete, fuhr er zu schnell.',['Obwohl es regnete fuhr er zu schnell.'],'Ein Nebensatz mit „obwohl“ wird mit Komma abgetrennt.'],
+['Das ist der Wagen, mit dem die Täter flohen.',['Das ist der Wagen mit dem, die Täter flohen.','Das ist der Wagen mit dem die Täter flohen.'],'Das Komma steht vor der Präposition, mit der der Relativsatz beginnt.'],
+['Bitte melden Sie sich, wenn Ihnen etwas auffällt.',['Bitte melden Sie sich wenn Ihnen etwas auffällt.'],'Vor „wenn“ steht ein Komma.'],
+['Er fragte, ob jemand etwas gesehen habe.',['Er fragte ob jemand etwas gesehen habe.'],'Vor „ob“ steht ein Komma.']
+];
+const zsQ=x=>Q('Welcher Satz ist richtig geschrieben?',x[0],x[1],x[2]);
+const RULES={
+A:'Nomen oder einteiliger Name + Straße, Platz, Weg …: <b>zusammen</b> (Schillerstraße, Bahnhofstraße).',
+B:'Ableitung auf <b>-er</b> von einem Orts- oder Ländernamen: <b>getrennt</b> (Kölner Straße, Bonner Wall).',
+C:'<b>Gebeugtes</b> Adjektiv: <b>getrennt und groß</b> (Hohe Straße, Alter Markt).',
+D:'<b>Ungebeugtes</b> Adjektiv: <b>zusammen</b> (Neumarkt, Hochstraße).',
+E:'<b>Mehrteilige</b> Namen: mit <b>Bindestrichen</b> durchkoppeln (Konrad-Adenauer-Ufer).',
+F:'Beginnt der Name mit einer <b>Präposition oder einem Artikel</b>: getrennt, erstes Wort groß (Am Hof, Unter Sachsenhausen).'
+};
+const ST=[
+['Schillerstraße',['Schiller Straße','Schiller-Straße'],'A'],['Bahnhofstraße',['Bahnhof Straße','Bahnhof-Straße'],'A'],['Rathausplatz',['Rathaus Platz','Rathaus-Platz'],'A'],
+['Kölner Straße',['Kölnerstraße','Kölner-Straße'],'B'],['Aachener Weg',['Aachenerweg','Aachener-Weg'],'B'],['Bonner Wall',['Bonnerwall','Bonner-Wall'],'B'],
+['Hohe Straße',['Hohestraße','Hohe-Straße'],'C'],['Breite Straße',['Breitestraße','Breite-Straße'],'C'],['Alter Markt',['Altermarkt','Alter-Markt'],'C'],
+['Neumarkt',['Neu Markt','Neu-Markt'],'D'],['Hochstraße',['Hoch Straße','Hoch-Straße'],'D'],
+['Konrad-Adenauer-Ufer',['Konrad Adenauer Ufer','Konrad-Adenauer Ufer'],'E'],['Albert-Schweitzer-Straße',['Albert Schweitzer Straße','Albert-Schweitzerstraße'],'E'],
+['Von-Werth-Straße',['Von Werth Straße','Von-Werthstraße'],'E'],['Kaiser-Wilhelm-Ring',['Kaiser Wilhelm Ring','Kaiser-Wilhelmring'],'E'],
+['Am Hof',['Am-Hof','Amhof'],'F'],['An den Dominikanern',['An-den-Dominikanern','An den dominikanern'],'F'],['Unter Sachsenhausen',['Unter-Sachsenhausen','Untersachsenhausen'],'F']
+];
+const stQ=x=>Q('Welche Schreibweise des Straßennamens ist richtig?',x[0],x[1],RULES[x[2]]);
+function startStreets(m){
+  app().innerHTML=head(m)+`<div class="card"><p><b>Die sechs Regeln für Straßennamen</b></p><ol class="rules">${Object.values(RULES).map(r=>`<li>${r}</li>`).join('')}</ol><div class="btnrow"><button class="btn" id="go">Üben starten</button></div></div>`;
+  $('#go').onclick=()=>runQuiz(m,sample(ST,10).map(stQ),()=>startStreets(m));
+}
+
+/* ---------- Verkehrszeichen ---------- */
+function startSigns(m){
+  app().innerHTML=head(m)+`<div class="card"><p><b>Namen-Quiz:</b> Du siehst ein Zeichen und wählst den richtigen Namen.</p><p><b>Blitz-Modus:</b> Drei Zeichen erscheinen für kurze Zeit. Danach wählst du aus, welche du gesehen hast – ähnlich wie beim Merken einer Verkehrssituation.</p><div class="btnrow"><button class="btn" id="nq">Namen-Quiz</button><button class="btn" id="bl">Blitz-Modus</button></div></div>`;
+  $('#nq').onclick=()=>runQuiz(m,sample(SIGNS,10).map(s=>{const w=sample(SIGNS.filter(x=>x!==s),3);return Q(`<div style="width:min(45vw,170px);margin:0 auto 8px">${svg(s.s)}</div>Wie heißt dieses Zeichen?`,s.name,w.map(x=>x.name),`Zeichen ${s.nr}: ${s.meaning}`)}),()=>startSigns(m));
+  $('#bl').onclick=()=>blitz(m,0,0);
+}
+function blitz(m,round,score){
+  const ROUNDS=5;
+  if(round>=ROUNDS){const p=Math.round(score/ROUNDS*100);setBest(m.id,Math.max(getBest(m.id)||0,p));app().innerHTML=head(m)+`<div class="card result"><div class="big">${score}/${ROUNDS}</div><p>Runden komplett richtig.</p><div class="btnrow"><button class="btn" id="again">Neue Runde</button><button class="btn ghost" onclick="home()">Zur Übersicht</button></div></div>`;$('#again').onclick=()=>blitz(m,0,0);return}
+  const shown=sample(SIGNS,3),opts=shuffle([...shown,...sample(SIGNS.filter(x=>!shown.includes(x)),3)]);
+  app().innerHTML=head(m)+`<div class="progress">Runde ${round+1} von ${ROUNDS}</div><div class="card"><p class="muted" style="text-align:center;margin:0">Gut hinsehen …</p><div class="blitz">${shown.map(s=>svg(s.s)).join('')}</div></div>`;
+  stopTimer();TIMER=setTimeout(()=>{
+    const sel=new Set();let done=false;
+    const r=()=>{app().innerHTML=head(m)+`<div class="progress">Runde ${round+1} von ${ROUNDS}</div><div class="prompt">Welche drei Zeichen hast du gesehen?</div><div class="opts imgopts sixopts">${opts.map((s,k)=>`<button class="opt ${done?(shown.includes(s)?'right':sel.has(k)?'wrong':''):(sel.has(k)?'sel':'')}" data-k="${k}" ${done?'disabled':''}>${svg(s.s)}</button>`).join('')}</div>${done?`<div class="feedback"><strong>${ok()?'Richtig.':'Nicht ganz.'}</strong> Gezeigt wurden: ${shown.map(s=>s.name).join(', ')}.</div><div class="btnrow"><button class="btn" id="next">Weiter</button></div>`:`<div class="btnrow"><button class="btn" id="chk" ${sel.size!==3?'disabled style="opacity:.5"':''}>Prüfen</button></div>`}`;
+      if(!done){app().querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const k=+b.dataset.k;sel.has(k)?sel.delete(k):sel.size<3&&sel.add(k);r()});$('#chk').onclick=()=>{if(sel.size===3){done=true;r()}}}
+      else $('#next').onclick=()=>blitz(m,round+1,score+(ok()?1:0));
+    };
+    const ok=()=>[...sel].every(k=>shown.includes(opts[k]));
+    r();
+  },2500);
+}
+
+/* ---------- Module & Start ---------- */
+const MODS=[
+ {id:'steck',g:'Gedächtnis',title:'Steckbriefe',d:'Vier Steckbriefe einprägen, dann Fragen beantworten',run:startSteck},
+ {id:'scene',g:'Gedächtnis',title:'Verkehrssituation',d:'Ein Straßenbild einprägen und Details abrufen',run:startScene},
+ {id:'texte',g:'Gedächtnis',title:'Texte merken',d:'Eine kurze Meldung lesen, dann Fragen zum Inhalt',run:startTexte},
+ {id:'sym',g:'Logik & Analyse',title:'Rechnen mit Symbolen',d:'Welche Zahl steckt hinter welchem Symbol?',run:m=>runQuiz(m,range(1,8).map(genSym),()=>MODS[3].run(m))},
+ {id:'fig',g:'Logik & Analyse',title:'Figurenfolgen',d:'Das Muster erkennen und fortsetzen',run:m=>runQuiz(m,range(1,8).map(genFig),()=>MODS[4].run(m))},
+ {id:'flow',g:'Logik & Analyse',title:'Flussdiagramme',d:'Rechenwege Schritt für Schritt verfolgen',run:m=>runQuiz(m,range(1,6).map(genFlow),()=>MODS[5].run(m))},
+ {id:'syl',g:'Logik & Analyse',title:'Logische Schlüsse',d:'Folgt die Aussage zwingend? (Syllogismen)',run:m=>runQuiz(m,sample(SYL,8).map(synQ),()=>MODS[6].run(m))},
+ {id:'ana',g:'Logik & Analyse',title:'Wortanalogien',d:'A verhält sich zu B wie C zu …?',run:m=>runQuiz(m,sample(ANA,8).map(anaQ),()=>MODS[7].run(m))},
+ {id:'data',g:'Logik & Analyse',title:'Datenanalyse',d:'Tabellen lesen und auswerten',run:m=>runQuiz(m,range(1,6).map(genData),()=>MODS[8].run(m))},
+ {id:'tm',g:'Logik & Analyse',title:'Tatsache oder Meinung',d:'Überprüfbare Aussage oder Wertung?',run:m=>runQuiz(m,sample(TM,10).map(tmQ),()=>MODS[9].run(m))},
+ {id:'rs',g:'Deutsch',title:'Rechtschreibung',d:'Typische Fehlerwörter, das/dass, seit/seid',run:m=>runQuiz(m,sample(RS,10).map(rsQ),()=>MODS[10].run(m))},
+ {id:'zs',g:'Deutsch',title:'Zeichensetzung',d:'Den richtig geschriebenen Satz finden',run:m=>runQuiz(m,sample(ZS,8).map(zsQ),()=>MODS[11].run(m))},
+ {id:'str',g:'Deutsch',title:'Straßennamen',d:'Zusammen, getrennt oder mit Bindestrich?',run:startStreets},
+ {id:'vz',g:'Extra',title:'Verkehrszeichen',d:'Namen-Quiz und Blitz-Modus',run:startSigns}
+];
+function home(){
+  stopTimer();clearTimeout(TIMER);
+  const groups=[...new Set(MODS.map(m=>m.g))];
+  app().innerHTML=`<h1>Testtrainer Polizei NRW</h1><p class="lead">Übungen zum PC-Test am ersten Verfahrenstag: Gedächtnis, Logik und Deutsch. Jede Runde wird neu gemischt.</p>`+
+  groups.map(g=>`<div class="group-h">${g}</div><div class="grid">${MODS.filter(m=>m.g===g).map(m=>{const b=getBest(m.id);return `<button class="mod" data-id="${m.id}"><b>${m.title}</b><span>${m.d}</span>${b!=null?`<em>Bestwert: ${b} %</em>`:''}</button>`}).join('')}</div>`).join('')+
+  `<p class="foot">Grundlage ist das Info-Blatt der Polizei Köln zum Auswahlverfahren. Die Aufgaben sind Übungsbeispiele, keine Originalaufgaben. Aktuelle Infos gibt es auf genau-mein-fall.de und bei der Einstellungsberatung der Polizei Köln.</p>`;
+  app().querySelectorAll('.mod').forEach(b=>b.onclick=()=>{const m=MODS.find(x=>x.id===b.dataset.id);window.scrollTo(0,0);m.run(m)});
+}
+home();
 </script>
 </body>
 </html>
